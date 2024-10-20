@@ -100,13 +100,16 @@
     Papa.parse("https://raw.githubusercontent.com/snmash/VoteCalculator/refs/heads/main/voter_turnout_data.csv", {
         download: true,
         header: true,
+        skipEmptyLines: true, // Skip empty rows
         complete: function(results) {
             if (results.errors.length > 0) {
                 console.error("Errors while parsing CSV:", results.errors);
-                return;
+                results.errors.forEach(error => {
+                    console.warn(`Row ${error.row} had an error: ${error.message}`);
+                });
             }
 
-            results.data.forEach(row => {
+            results.data.forEach((row, index) => {
                 // Ensure the necessary fields are present before proceeding
                 const state = row['State'];
                 const county = row['County Name'];
@@ -115,7 +118,7 @@
 
                 if (!state || !county || !turnoutStr || !votePowerStr) {
                     // If any required data is missing, skip this row
-                    console.warn(`Skipping row due to missing data: ${JSON.stringify(row)}`);
+                    console.warn(`Skipping row ${index + 1} due to missing data: ${JSON.stringify(row)}`);
                     return;
                 }
 
@@ -125,7 +128,7 @@
 
                 // If parsing fails (i.e., resulting in NaN), skip this row
                 if (isNaN(turnout) || isNaN(votePower)) {
-                    console.warn(`Skipping row due to NaN value: ${JSON.stringify(row)}`);
+                    console.warn(`Skipping row ${index + 1} due to NaN value: ${JSON.stringify(row)}`);
                     return;
                 }
 

@@ -102,15 +102,32 @@
             header: true,
             complete: function(results) {
                 results.data.forEach(row => {
+                    // Ensure the necessary fields are present before proceeding
                     const state = row['State'];
                     const county = row['County Name'];
-                    const turnout = parseFloat(row['Voter Turnout %'].replace('%', ''));
-                    const votePower = parseFloat(row['Vote Power']);
+                    const turnoutStr = row['Voter Turnout %'];
+                    const votePowerStr = row['Vote Power'];
 
+                    if (!state || !county || !turnoutStr || !votePowerStr) {
+                        // If any required data is missing, skip this row
+                        return;
+                    }
+
+                    // Safely parse the turnout and vote power
+                    const turnout = parseFloat(turnoutStr.replace('%', ''));
+                    const votePower = parseFloat(votePowerStr);
+
+                    // If parsing fails (i.e., resulting in NaN), skip this row
+                    if (isNaN(turnout) || isNaN(votePower)) {
+                        return;
+                    }
+
+                    // Initialize the state entry if it doesn't exist
                     if (!stateCountyData[state]) {
                         stateCountyData[state] = [];
                     }
 
+                    // Add county data
                     stateCountyData[state].push({
                         county: county,
                         turnout: turnout,
@@ -120,6 +137,9 @@
 
                 // Populate state dropdown after data has loaded
                 populateStates();
+            },
+            error: function(error) {
+                console.error("Error parsing CSV:", error);
             }
         });
 

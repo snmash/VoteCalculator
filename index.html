@@ -231,7 +231,7 @@
 
             // Update social media share links
             const shareText = `I just discovered my voting power in ${county}, ${state}! I'm voting on behalf of ${countyData.vote_power.toFixed(1)} eligible voters. Find out yours at [https://snmash.github.io/VoteCalculator/].`;
-            document.getElementById('facebook-share').href = `https://www.facebook.com/sharer/sharer.php?u=[your website URL]&quote=${encodeURIComponent(shareText)}`;
+            document.getElementById('facebook-share').href = `https://www.facebook.com/sharer/sharer.php?u=[https://snmash.github.io/VoteCalculator/]&quote=${encodeURIComponent(shareText)}`;
             document.getElementById('instagram-share').href = `https://www.instagram.com/`; // Instagram does not support direct share links, encourage users to copy/share manually.
             document.getElementById('x-share').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
             document.getElementById('threads-share').href = `https://www.threads.net/`; // Threads does not yet have direct share URL schemes.

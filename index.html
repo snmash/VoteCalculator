@@ -109,7 +109,7 @@
                 });
             }
 
-            results.data.forEach((row, index) => {
+            results.data.slice(0, 3112).forEach((row, index) => {  // Limit processing to first 3112 rows
                 // Ensure the necessary fields are present before proceeding
                 const state = row['State'];
                 const county = row['County Name'];

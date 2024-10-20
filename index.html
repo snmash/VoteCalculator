@@ -96,9 +96,7 @@
             <a href="#" id="threads-share">Threads</a>
             <a href="#" id="linkedin-share">LinkedIn</a>
         </div>
-        <div class="footnote">
-            *Actual and eligible voter information is sourced from MIT Election Data and Science Labs, and Census American Community Survey 5-Year Estimates data sets.
-        </div>
+        
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 <script>
@@ -225,6 +223,11 @@
         if (countyData) {
             resultContainer.innerHTML = `You are voting on behalf of <strong>${countyData.vote_power.toFixed(1)}</strong> eligible voters! Voter turnout in your county was <strong>${countyData.turnout.toFixed(1)}%</strong> based on election data from 2016-2020*. Remember to go out and vote!`;
             socialShareContainer.style.display = 'block';
+            // Show the footnote
+            const footnote = document.createElement('div');
+            footnote.className = 'footnote';
+            footnote.innerHTML = '*Actual and eligible voter information is sourced from MIT Election Data and Science Labs, and Census American Community Survey 5-Year Estimates data sets.';
+            document.querySelector('.container').appendChild(footnote);
 
             // Update social media share links
             const shareText = `I just discovered my voting power in ${county}, ${state}! I'm voting on behalf of ${countyData.vote_power.toFixed(1)} eligible voters. Find out yours at [your website URL].`;

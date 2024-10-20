@@ -1,208 +1,111 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>How Many People Am I Voting For?</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        .container {
-            text-align: center;
-            background: #fff;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-            width: 100%;
-        }
-        h1 {
-            font-size: 2em;
-            margin-bottom: 20px;
-        }
-        select, button {
-            padding: 10px;
-            font-size: 1em;
-            margin: 10px;
-            width: calc(100% - 22px);
-            max-width: 300px;
-        }
-        button {
-            background-color: #007acc;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        button:hover {
-            background-color: #005a99;
-        }
-        .result {
-            margin-top: 20px;
-            font-size: 1.2em;
-            padding: 20px;
-            border-top: 1px solid #e0e0e0;
-        }
-        .social-share {
-            margin-top: 20px;
-        }
-        .social-share a {
-            margin: 0 10px;
-            text-decoration: none;
-            color: #007acc;
-            font-weight: bold;
-        }
-        .social-share a:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>How many people am I voting for?</h1>
-        <div class="dropdowns">
-            <select id="state-select">
-                <option value="">Select your state</option>
-                <!-- State options will be populated here dynamically -->
-            </select>
-            <select id="county-select" disabled>
-                <option value="">Select your county</option>
-                <!-- County options will populate after state selection -->
-            </select>
-        </div>
-        <button id="calculate-button" disabled>Calculate!</button>
-        <div class="result" id="result-container"></div>
-        <div class="social-share" id="social-share-container" style="display: none;">
-            <p>Share your voting power:</p>
-            <a href="#" id="facebook-share">Facebook</a>
-            <a href="#" id="instagram-share">Instagram</a>
-            <a href="#" id="x-share">X (Twitter)</a>
-            <a href="#" id="threads-share">Threads</a>
-            <a href="#" id="linkedin-share">LinkedIn</a>
-        </div>
-    </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-    <script>
-        // Load CSV file using PapaParse
-        let stateCountyData = {};
+<script>
+    // Load CSV file using PapaParse
+    let stateCountyData = {};
 
-        Papa.parse("https://raw.githubusercontent.com/snmash/VoteCalculator/main/voter_turnout_data.csv", {
-            download: true,
-            header: true,
-            complete: function(results) {
-                results.data.forEach(row => {
-                    // Ensure the necessary fields are present before proceeding
-                    const state = row['State'];
-                    const county = row['County Name'];
-                    const turnoutStr = row['Voter Turnout'];
-                    const votePowerStr = row['Vote Power'];
+    Papa.parse("https://raw.githubusercontent.com/snmash/VoteCalculator/main/voter_turnout_data.csv", {
+        download: true,
+        header: true,
+        complete: function(results) {
+            results.data.forEach(row => {
+                // Ensure the necessary fields are present before proceeding
+                const state = row['State'];
+                const county = row['County Name'];
+                const turnoutStr = row['Voter Turnout'] ? row['Voter Turnout'].replace('%', '') : null;
+                const votePowerStr = row['Vote Power'];
 
-                    if (!state || !county || !turnoutStr || !votePowerStr) {
-                        // If any required data is missing, skip this row
-                        return;
-                    }
+                if (!state || !county || !turnoutStr || !votePowerStr) {
+                    // If any required data is missing, skip this row
+                    return;
+                }
 
-                    // Safely parse the turnout and vote power
-                    const turnout = parseFloat(turnoutStr);
-                    const votePower = parseFloat(votePowerStr);
+                // Safely parse the turnout and vote power
+                const turnout = parseFloat(turnoutStr);
+                const votePower = parseFloat(votePowerStr);
 
-                    // If parsing fails (i.e., resulting in NaN), skip this row
-                    if (isNaN(turnout) || isNaN(votePower)) {
-                        return;
-                    }
+                // If parsing fails (i.e., resulting in NaN), skip this row
+                if (isNaN(turnout) || isNaN(votePower)) {
+                    return;
+                }
 
-                    // Initialize the state entry if it doesn't exist
-                    if (!stateCountyData[state]) {
-                        stateCountyData[state] = [];
-                    }
+                // Initialize the state entry if it doesn't exist
+                if (!stateCountyData[state]) {
+                    stateCountyData[state] = [];
+                }
 
-                    // Add county data
-                    stateCountyData[state].push({
-                        county: county,
-                        turnout: turnout,
-                        vote_power: votePower
-                    });
+                // Add county data
+                stateCountyData[state].push({
+                    county: county,
+                    turnout: turnout,
+                    vote_power: votePower
                 });
+            });
 
-                // Populate state dropdown after data has loaded
-                populateStates();
-            },
-            error: function(error) {
-                console.error("Error parsing CSV:", error);
-            }
-        });
-
-        // Populate state dropdown
-        function populateStates() {
-            const stateSelect = document.getElementById('state-select');
-            for (let state in stateCountyData) {
-                let option = document.createElement('option');
-                option.value = state;
-                option.textContent = state;
-                stateSelect.appendChild(option);
-            }
+            // Populate state dropdown after data has loaded
+            populateStates();
+        },
+        error: function(error) {
+            console.error("Error parsing CSV:", error);
         }
+    });
 
+    // Populate state dropdown
+    function populateStates() {
         const stateSelect = document.getElementById('state-select');
-        const countySelect = document.getElementById('county-select');
-        const calculateButton = document.getElementById('calculate-button');
-        const resultContainer = document.getElementById('result-container');
-        const socialShareContainer = document.getElementById('social-share-container');
+        for (let state in stateCountyData) {
+            let option = document.createElement('option');
+            option.value = state;
+            option.textContent = state;
+            stateSelect.appendChild(option);
+        }
+    }
 
-        // Enable and populate county dropdown based on state selection
-        stateSelect.addEventListener('change', function() {
-            const selectedState = this.value;
-            countySelect.innerHTML = '<option value="">Select your county</option>';
-            countySelect.disabled = selectedState === "";
+    const stateSelect = document.getElementById('state-select');
+    const countySelect = document.getElementById('county-select');
+    const calculateButton = document.getElementById('calculate-button');
+    const resultContainer = document.getElementById('result-container');
+    const socialShareContainer = document.getElementById('social-share-container');
 
-            if (selectedState) {
-                stateCountyData[selectedState].forEach(entry => {
-                    let option = document.createElement('option');
-                    option.value = entry.county;
-                    option.textContent = entry.county;
-                    countySelect.appendChild(option);
-                });
-            }
-        });
+    // Enable and populate county dropdown based on state selection
+    stateSelect.addEventListener('change', function() {
+        const selectedState = this.value;
+        countySelect.innerHTML = '<option value="">Select your county</option>';
+        countySelect.disabled = selectedState === "";
 
-        // Enable calculate button once a county is selected
-        countySelect.addEventListener('change', function() {
-            calculateButton.disabled = this.value === "";
-        });
+        if (selectedState) {
+            stateCountyData[selectedState].forEach(entry => {
+                let option = document.createElement('option');
+                option.value = entry.county;
+                option.textContent = entry.county;
+                countySelect.appendChild(option);
+            });
+        }
+    });
 
-        // Calculate voting power when button is clicked
-        calculateButton.addEventListener('click', function() {
-            const state = stateSelect.value;
-            const county = countySelect.value;
+    // Enable calculate button once a county is selected
+    countySelect.addEventListener('change', function() {
+        calculateButton.disabled = this.value === "";
+    });
 
-            const countyData = stateCountyData[state].find(entry => entry.county === county);
+    // Calculate voting power when button is clicked
+    calculateButton.addEventListener('click', function() {
+        const state = stateSelect.value;
+        const county = countySelect.value;
 
-            if (countyData) {
-                resultContainer.innerHTML = `You are voting on behalf of <strong>${countyData.vote_power.toFixed(1)}</strong> eligible voters! Voter turnout in your county was <strong>${countyData.turnout.toFixed(1)}%</strong> based on election data from 2016-2020.<br><br>Actual and eligible voter information is sourced from MIT Election Data and Science Lab and Census American Community Survey 5-Year Estimates datasets. Remember to go out and vote!`;
-                socialShareContainer.style.display = 'block';
+        const countyData = stateCountyData[state].find(entry => entry.county === county);
 
-                // Update social media share links
-                const shareText = `I just discovered my voting power in ${county}, ${state}! I'm voting on behalf of ${countyData.vote_power.toFixed(1)} eligible voters. Find out yours at [your website URL].`;
-                document.getElementById('facebook-share').href = `https://www.facebook.com/sharer/sharer.php?u=[your website URL]&quote=${encodeURIComponent(shareText)}`;
-                document.getElementById('instagram-share').href = `https://www.instagram.com/`; // Instagram does not support direct share links, encourage users to copy/share manually.
-                document.getElementById('x-share').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
-                document.getElementById('threads-share').href = `https://www.threads.net/`; // Threads does not yet have direct share URL schemes.
-                document.getElementById('linkedin-share').href = `https://www.linkedin.com/sharing/share-offsite/?url=[your website URL]&title=${encodeURIComponent(shareText)}`;
-            } else {
-                resultContainer.innerHTML = `Sorry, we couldn't find data for ${county}, ${state}. Please try another selection.`;
-            }
-        });
-    </script>
-</body>
-</html>
+        if (countyData) {
+            resultContainer.innerHTML = `You are voting on behalf of <strong>${countyData.vote_power.toFixed(1)}</strong> eligible voters! Voter turnout in your county was <strong>${countyData.turnout.toFixed(1)}%</strong> based on election data from 2016-2020.<br><br>Actual and eligible voter information is sourced from MIT Election Data and Science Lab and Census American Community Survey 5-Year Estimates datasets. Remember to go out and vote!`;
+            socialShareContainer.style.display = 'block';
+
+            // Update social media share links
+            const shareText = `I just discovered my voting power in ${county}, ${state}! I'm voting on behalf of ${countyData.vote_power.toFixed(1)} eligible voters. Find out yours at [your website URL].`;
+            document.getElementById('facebook-share').href = `https://www.facebook.com/sharer/sharer.php?u=[your website URL]&quote=${encodeURIComponent(shareText)}`;
+            document.getElementById('instagram-share').href = `https://www.instagram.com/`; // Instagram does not support direct share links, encourage users to copy/share manually.
+            document.getElementById('x-share').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
+            document.getElementById('threads-share').href = `https://www.threads.net/`; // Threads does not yet have direct share URL schemes.
+            document.getElementById('linkedin-share').href = `https://www.linkedin.com/sharing/share-offsite/?url=[your website URL]&title=${encodeURIComponent(shareText)}`;
+        } else {
+            resultContainer.innerHTML = `Sorry, we couldn't find data for ${county}, ${state}. Please try another selection.`;
+        }
+    });
+</script>

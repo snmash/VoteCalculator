@@ -66,6 +66,11 @@
         .social-share a:hover {
             text-decoration: underline;
         }
+        .footnote {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #555;
+        }
     </style>
 </head>
 <body>
@@ -90,6 +95,9 @@
             <a href="#" id="x-share">X (Twitter)</a>
             <a href="#" id="threads-share">Threads</a>
             <a href="#" id="linkedin-share">LinkedIn</a>
+        </div>
+        <div class="footnote">
+            *Actual and eligible voter information is sourced from MIT Election Data and Science Labs, and Census American Community Survey 5-Year Estimates data sets.
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
@@ -215,7 +223,7 @@
         const countyData = stateCountyData[state].find(entry => entry.county === county);
 
         if (countyData) {
-            resultContainer.innerHTML = `You are voting on behalf of <strong>${countyData.vote_power.toFixed(1)}</strong> eligible voters! Voter turnout in your county was <strong>${countyData.turnout.toFixed(1)}%</strong> based on election data from 2016-2020.<br><br>Actual and eligible voter information is sourced from MIT Election Data and Science Lab and Census American Community Survey 5-Year Estimates datasets. Remember to go out and vote!`;
+            resultContainer.innerHTML = `You are voting on behalf of <strong>${countyData.vote_power.toFixed(1)}</strong> eligible voters! Voter turnout in your county was <strong>${countyData.turnout.toFixed(1)}%</strong> based on election data from 2016-2020*. Remember to go out and vote!`;
             socialShareContainer.style.display = 'block';
 
             // Update social media share links

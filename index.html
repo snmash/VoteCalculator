@@ -105,7 +105,7 @@
                     // Ensure the necessary fields are present before proceeding
                     const state = row['State'];
                     const county = row['County Name'];
-                    const turnoutStr = row['Voter Turnout %'];
+                    const turnoutStr = row['Voter Turnout'];
                     const votePowerStr = row['Vote Power'];
 
                     if (!state || !county || !turnoutStr || !votePowerStr) {
@@ -114,7 +114,7 @@
                     }
 
                     // Safely parse the turnout and vote power
-                    const turnout = parseFloat(turnoutStr.replace('%', ''));
+                    const turnout = parseFloat(turnoutStr);
                     const votePower = parseFloat(votePowerStr);
 
                     // If parsing fails (i.e., resulting in NaN), skip this row

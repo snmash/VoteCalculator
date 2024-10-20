@@ -92,41 +92,53 @@
             <a href="#" id="linkedin-share">LinkedIn</a>
         </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script>
-        // Data parsed from CSV for all states and counties
-        const stateCountyData = {
-            'AL': [
-                {'county': 'Autauga County', 'turnout': 66.2, 'vote_power': 1.5},
-                {'county': 'Baldwin County', 'turnout': 65.3, 'vote_power': 1.5},
-                {'county': 'Barbour County', 'turnout': 54.0, 'vote_power': 1.9},
-                {'county': 'Bibb County', 'turnout': 54.6, 'vote_power': 1.8},
-                {'county': 'Blount County', 'turnout': 64.2, 'vote_power': 1.6}
-                // More counties...
-            ],
-            'CO': [
-                {'county': 'Adams County', 'turnout': 72.1, 'vote_power': 1.4},
-                {'county': 'Alamosa County', 'turnout': 68.5, 'vote_power': 1.5},
-                {'county': 'Arapahoe County', 'turnout': 75.2, 'vote_power': 1.3},
-                {'county': 'Archuleta County', 'turnout': 77.9, 'vote_power': 1.3},
-                {'county': 'Baca County', 'turnout': 60.1, 'vote_power': 1.7}
-                // More counties...
-            ]
-            // More states...
-        };
+        // Load CSV file using PapaParse
+        let stateCountyData = {};
+
+        Papa.parse("voter_turnout_data.csv", {
+            download: true,
+            header: true,
+            complete: function(results) {
+                results.data.forEach(row => {
+                    const state = row['State'];
+                    const county = row['County Name'];
+                    const turnout = parseFloat(row['Voter Turnout %'].replace('%', ''));
+                    const votePower = parseFloat(row['Vote Power']);
+
+                    if (!stateCountyData[state]) {
+                        stateCountyData[state] = [];
+                    }
+
+                    stateCountyData[state].push({
+                        county: county,
+                        turnout: turnout,
+                        vote_power: votePower
+                    });
+                });
+
+                // Populate state dropdown after data has loaded
+                populateStates();
+            }
+        });
 
         // Populate state dropdown
+        function populateStates() {
+            const stateSelect = document.getElementById('state-select');
+            for (let state in stateCountyData) {
+                let option = document.createElement('option');
+                option.value = state;
+                option.textContent = state;
+                stateSelect.appendChild(option);
+            }
+        }
+
         const stateSelect = document.getElementById('state-select');
         const countySelect = document.getElementById('county-select');
         const calculateButton = document.getElementById('calculate-button');
         const resultContainer = document.getElementById('result-container');
         const socialShareContainer = document.getElementById('social-share-container');
-
-        for (let state in stateCountyData) {
-            let option = document.createElement('option');
-            option.value = state;
-            option.textContent = state;
-            stateSelect.appendChild(option);
-        }
 
         // Enable and populate county dropdown based on state selection
         stateSelect.addEventListener('change', function() {

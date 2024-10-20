@@ -115,6 +115,12 @@
                     return;
                 }
 
+                // Ensure that the row has all the expected fields
+                if (Object.keys(row).length < 5) {
+                    console.warn(`Skipping row ${index + 1} due to insufficient fields: ${JSON.stringify(row)}`);
+                    return;
+                }
+
                 // Ensure the necessary fields are present before proceeding
                 const state = row['State'];
                 const county = row['County Name'];

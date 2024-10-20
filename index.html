@@ -75,7 +75,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>How many people am I voting for?</h1>
+        <h1>How many votes am I worth?</h1>
         <div class="dropdowns">
             <select id="state-select">
                 <option value="">Select your state</option>
@@ -221,12 +221,12 @@
         const countyData = stateCountyData[state].find(entry => entry.county === county);
 
         if (countyData) {
-            resultContainer.innerHTML = `You are voting on behalf of <strong>${countyData.vote_power.toFixed(1)}</strong> eligible voters! Voter turnout in your county was <strong>${countyData.turnout.toFixed(1)}%</strong> based on election data from 2016-2020*. Remember to go out and vote!`;
+            resultContainer.innerHTML = `Your vote counts for <strong>${countyData.vote_power.toFixed(1)}</strong> voters!<br><br>What does this mean? Your vote is more powerful than you realize because only <strong>${countyData.turnout.toFixed(1)}%</strong> of voters have historically voted in your county. Remember to vote!`;
             socialShareContainer.style.display = 'block';
             // Show the footnote
             const footnote = document.createElement('div');
             footnote.className = 'footnote';
-            footnote.innerHTML = '*Actual and eligible voter information is sourced from MIT Election Data and Science Labs, and Census American Community Survey 5-Year Estimates data sets.';
+            footnote.innerHTML = '*Actual and eligible voter information is sourced from MIT Election Data and Science Labs, and Census American Community Survey 5-Year Estimates data.';
             document.querySelector('.container').appendChild(footnote);
 
             // Update social media share links
@@ -241,5 +241,4 @@
         }
     });
 </script>
-</body>
-</html>
+</body

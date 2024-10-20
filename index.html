@@ -261,7 +261,7 @@
             document.getElementById('instagram-share').href = `https://www.instagram.com/`; // Instagram does not support direct share links, encourage users to copy/share manually.
             document.getElementById('x-share').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
             document.getElementById('threads-share').href = `https://www.threads.net/`; // Threads does not yet have direct share URL schemes.
-            document.getElementById('linkedin-share').href = `https://www.linkedin.com/sharing/share-offsite/?url=[https://snmash.github.io/VoteCalculator/]&title=${encodeURIComponent(shareText)}`;
+            document.getElementById('linkedin-share').href = `https://www.linkedin.com/sharing/share-offsite/?url=https://snmash.github.io/VoteCalculator/&summary=${encodeURIComponent(shareText)}`;
         } else {
             resultContainer.innerHTML = `Sorry, we couldn't find data for ${county}, ${state}. Please try another selection.`;
         }

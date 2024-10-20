@@ -97,7 +97,7 @@
         // Load CSV file using PapaParse
         let stateCountyData = {};
 
-        Papa.parse("voter_turnout_data.csv", {
+        Papa.parse("https://raw.githubusercontent.com/snmash/VoteCalculator/refs/heads/main/voter_turnout_data.csv", {
             download: true,
             header: true,
             complete: function(results) {

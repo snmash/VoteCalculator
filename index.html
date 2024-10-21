@@ -270,7 +270,7 @@
             resultContainer.appendChild(footnote);
 
             // Update social media share links
-            const shareText = `I just discovered my voting power in ${county}, ${state}! I'm voting on behalf of ${countyData.vote_power.toFixed(1)} eligible voters. Find out yours at [https://votepower.us/].`;
+            const shareText = `I just discovered my voting power in ${county}, ${state}! I'm voting on behalf of ${countyData.vote_power.toFixed(1)} eligible voters. Find out yours at https://votepower.us/.`;
             document.getElementById('facebook-share').href = `https://www.facebook.com/sharer/sharer.php?u=https://votepower.us/&quote=${encodeURIComponent(shareText)}`;
             document.getElementById('instagram-share').href = `https://www.instagram.com/`; // Instagram does not support direct share links, encourage users to copy/share manually.
             document.getElementById('x-share').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;

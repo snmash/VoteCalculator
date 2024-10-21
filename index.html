@@ -114,8 +114,14 @@
         </div>
         <button id="calculate-button" disabled>Calculate!</button>
         <div class="result" id="result-container"></div>
-        <div class="social-share" id="social-share-container" style="display: none;"></div>
-        <p class="footnote">*Actual and eligible voter information sourced from MIT Election Data and Science Labs, and Census American Community Survey 5-Year Estimates data.</p>
+        <div class="social-share" id="social-share-container" style="display: none;">
+            <p>Share your voting power:</p>
+            <a href="#" id="facebook-share">Facebook</a>
+            <a href="#" id="instagram-share">Instagram</a>
+            <a href="#" id="x-share">X (Twitter)</a>
+            <a href="#" id="threads-share">Threads</a>
+            <a href="#" id="linkedin-share">LinkedIn</a></div>
+        
         <p>Created by <a href="https://www.linkedin.com/in/snmahesh/" target="_blank">Steven Maheshwary</a></p>
         
     </div>
@@ -248,7 +254,7 @@
             const footnote = document.createElement('div');
             footnote.className = 'footnote';
             footnote.innerHTML = '*Actual and eligible voter information sourced from MIT Election Data and Science Labs, and Census American Community Survey 5-Year Estimates data.';
-            document.querySelector('.container').appendChild(footnote);
+            resultContainer.appendChild(footnote);
 
             // Update social media share links
             const shareText = `I just discovered my voting power in ${county}, ${state}! I'm voting on behalf of ${countyData.vote_power.toFixed(1)} eligible voters. Find out yours at [https://snmash.github.io/VoteCalculator/].`;

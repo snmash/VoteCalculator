@@ -270,7 +270,7 @@
         const countyData = stateCountyData[state].find(entry => entry.county === county);
 
         if (countyData) {
-            resultContainer.innerHTML = `Your vote counts for <strong>${countyData.vote_power.toFixed(1)}</strong> voters!<br><br>What does this mean? Your vote is more powerful than you realize because only <strong>${countyData.turnout.toFixed(1)}%</strong> of voters have historically voted in your county. Now make that vote count - <a href="https://www.vote.org" target="_blank">register and vote today!</a>`;
+            resultContainer.innerHTML = `Your vote counts for <strong>${countyData.vote_power.toFixed(1)}</strong> voters!<br><br>What does this mean? Your vote may be more powerful than you realize because only <strong>${countyData.turnout.toFixed(1)}%</strong> of voters have historically voted in your county. Now make that vote count, <a href="https://www.vote.org" target="_blank">register and vote today!</a>`;
             socialShareContainer.style.display = 'block';
             socialShareContainer.style.marginTop = '10px';
             socialShareContainer.style.display = 'block';

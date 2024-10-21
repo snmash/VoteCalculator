@@ -100,7 +100,7 @@
     <!-- Add Open Graph Metadata -->
     <meta property="og:title" content="How Many Votes Am I Worth?" />
     <meta property="og:description" content="Find out how powerful your vote is based on historical voter turnout data. Make your vote count today!" />
-    <meta property="og:image" content="https://snmash.github.io/VoteCalculator/images/free-us-map-illustration-g0oem.jpg" />
+    <meta property="og:image" content="https://votepower.us/images/free-us-map-illustration-g0oem.jpg" />
     <meta property="og:url" content="https://snmash.github.io/VoteCalculator/" />
     <meta property="og:type" content="website" />
     <!-- Add Twitter Card Metadata -->
@@ -270,12 +270,12 @@
             resultContainer.appendChild(footnote);
 
             // Update social media share links
-            const shareText = `I just discovered my voting power in ${county}, ${state}! I'm voting on behalf of ${countyData.vote_power.toFixed(1)} eligible voters. Find out yours at [https://snmash.github.io/VoteCalculator/].`;
-            document.getElementById('facebook-share').href = `https://www.facebook.com/sharer/sharer.php?u=https://snmash.github.io/VoteCalculator/&quote=${encodeURIComponent(shareText)}`;
+            const shareText = `I just discovered my voting power in ${county}, ${state}! I'm voting on behalf of ${countyData.vote_power.toFixed(1)} eligible voters. Find out yours at [https://votepower.us/].`;
+            document.getElementById('facebook-share').href = `https://www.facebook.com/sharer/sharer.php?u=https://votepower.us/&quote=${encodeURIComponent(shareText)}`;
             document.getElementById('instagram-share').href = `https://www.instagram.com/`; // Instagram does not support direct share links, encourage users to copy/share manually.
             document.getElementById('x-share').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
             document.getElementById('threads-share').href = `https://www.threads.net/`; // Threads does not yet have direct share URL schemes.
-            document.getElementById('linkedin-share').href = `https://www.linkedin.com/sharing/share-offsite/?url=https://snmash.github.io/VoteCalculator/&summary=${encodeURIComponent(shareText)}`;
+            document.getElementById('linkedin-share').href = `https://www.linkedin.com/sharing/share-offsite/?url=https://votepower.us/&summary=${encodeURIComponent(shareText)}`;
         } else {
             resultContainer.innerHTML = `Sorry, we couldn't find data for ${county}, ${state}. Please try another selection.`;
         }

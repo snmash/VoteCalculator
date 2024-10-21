@@ -248,7 +248,7 @@
         const countyData = stateCountyData[state].find(entry => entry.county === county);
 
         if (countyData) {
-            resultContainer.innerHTML = `Your vote counts for <strong>${countyData.vote_power.toFixed(1)}</strong> voters!<br><br>What does this mean? Your vote is more powerful than you realize because only <strong>${countyData.turnout.toFixed(1)}%</strong> of voters have historically voted in your county. Remember to vote!';
+            resultContainer.innerHTML = `Your vote counts for <strong>${countyData.vote_power.toFixed(1)}</strong> voters!<br><br>What does this mean? Your vote is more powerful than you realize because only <strong>${countyData.turnout.toFixed(1)}%</strong> of voters have historically voted in your county. Remember to vote!`;
             socialShareContainer.style.display = 'block';
             socialShareContainer.style.marginTop = '10px';
             socialShareContainer.style.display = 'block';
@@ -256,11 +256,6 @@
             const footnote = document.createElement('div');
             footnote.className = 'footnote';
             footnote.innerHTML = 'Data sources: MIT Election Data and Science Labs; Census American Community Survey 5-Year Estimates';
-            resultContainer.appendChild(footnote);
-            // Show the footnote
-            const footnote = document.createElement('div');
-            footnote.className = 'footnote';
-            footnote.innerHTML = '';
             resultContainer.appendChild(footnote);
 
             // Update social media share links

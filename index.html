@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>How Many Votes Am I Worth?</title>
-    <meta name="description" content="Find out how powerful your vote is based on 2024 county voter turnout data. Make your vote count today!">
+    <meta name="description" content="Find out how powerful your vote is based on 2022 midterm and 2024 presidential county turnout. Make your vote count today!">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-VGYJ2GP82F"></script>
@@ -64,6 +64,39 @@
         button:disabled {
             background-color: #9cc3e0;
             cursor: default;
+        }
+        .election-toggle {
+            display: inline-flex;
+            border: 1px solid #007acc;
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 0 0 6px;
+        }
+        .election-toggle button {
+            margin: 0;
+            width: auto;
+            max-width: none;
+            border-radius: 0;
+            background: #fff;
+            color: #007acc;
+            padding: 8px 14px;
+            font-size: 0.9em;
+        }
+        .election-toggle button.active {
+            background: #007acc;
+            color: #fff;
+        }
+        .election-toggle button:hover:not(:disabled) {
+            transform: none;
+            background: #e6f2fa;
+        }
+        .election-toggle button.active:hover {
+            background: #005a99;
+        }
+        .toggle-hint {
+            font-size: 0.8em;
+            color: #666;
+            margin: 0 0 8px;
         }
         .result {
             margin-top: 20px;
@@ -165,20 +198,25 @@
     </style>
     <!-- Open Graph -->
     <meta property="og:title" content="How Many Votes Am I Worth?" />
-    <meta property="og:description" content="Find out how powerful your vote is based on 2024 county voter turnout data. Make your vote count today!" />
+    <meta property="og:description" content="Find out how powerful your vote is based on 2022 midterm and 2024 presidential county turnout. Make your vote count today!" />
     <meta property="og:image" content="https://votepower.us/images/free-us-map-illustration-g0oem.jpg" />
     <meta property="og:url" content="https://votepower.us/" />
     <meta property="og:type" content="website" />
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="How Many Votes Am I Worth?" />
-    <meta name="twitter:description" content="Find out how powerful your vote is based on 2024 county voter turnout data. Make your vote count today!" />
+    <meta name="twitter:description" content="Find out how powerful your vote is based on 2022 midterm and 2024 presidential county turnout. Make your vote count today!" />
     <meta name="twitter:image" content="https://votepower.us/images/free-us-map-illustration-g0oem.jpg" />
 </head>
 <body>
     <div class="container">
         <img src="images/free-us-map-illustration-g0oem.jpg" alt="Map of the United States" class="hero-banner">
         <h1>How many votes am I worth?</h1>
+        <div class="election-toggle" role="group" aria-label="Election type">
+            <button type="button" data-election="2022" class="active" aria-pressed="true">Midterm (2022)</button>
+            <button type="button" data-election="2024" aria-pressed="false">Presidential (2024)</button>
+        </div>
+        <p class="toggle-hint" id="toggle-hint">2026 is a midterm year &mdash; turnout is typically much lower.</p>
         <div class="dropdowns">
             <select id="state-select" aria-label="State">
                 <option value="">Select your state</option>
@@ -207,7 +245,8 @@
 
         <h3>Data</h3>
         <ul>
-            <li><strong>Votes cast:</strong> total votes for U.S. President in the November 2024 general election, by county, from official state records compiled by the MIT Election Data and Science Lab.</li>
+            <li><strong>Votes cast, presidential (2024):</strong> total votes for U.S. President in the November 2024 general election, by county, from official state records compiled by the MIT Election Data and Science Lab.</li>
+            <li><strong>Votes cast, midterm (2022):</strong> the highest vote total for any statewide race (U.S. Senate, governor, other statewide offices and ballot questions) or for U.S. House summed across districts, by county. This is the standard proxy for ballots cast when no single race appears on every ballot. Built from MIT Election Data and Science Lab precinct-level returns. Indiana (where many counties didn&rsquo;t report precinct data), Phillips County, AR and Power County, ID use county-level certified totals instead.</li>
             <li><strong>Eligible citizens:</strong> citizen voting-age population (CVAP), 2020&ndash;2024 American Community Survey 5-year estimates, U.S. Census Bureau special tabulation (released January 2026).</li>
         </ul>
 
@@ -220,16 +259,19 @@
 
         <h3>Caveats</h3>
         <ul>
-            <li><strong>Turnout is slightly understated.</strong> Ballots that skipped the presidential race are not counted.</li>
+            <li><strong>Turnout is slightly understated.</strong> Ballots that skipped the top race are not counted.</li>
+            <li><strong>One population estimate for both years.</strong> The 2020&ndash;2024 survey estimate, centered on 2022, is the denominator for both elections.</li>
             <li><strong>Small counties are noisy.</strong> Census survey estimates for counties with a few thousand residents carry wide margins of error. Results above 100% are capped at 100%.</li>
             <li><strong>Some counties include residents who can&rsquo;t vote there.</strong> CVAP counts incarcerated people (ineligible in most states), military personnel registered in their home states, and students registered elsewhere. Counties with large prisons or bases can show artificially low turnout and high Vote Power.</li>
-            <li><strong>Midterms are different.</strong> Turnout in midterm years, such as 2026, typically runs well below presidential years, so your vote likely carries even more weight in a midterm than shown here.</li>
+            <li><strong>Midterms are different.</strong> Turnout in midterm years, such as 2026, typically runs well below presidential years. Nationally it was about 46% in 2022 versus 64% in 2024, which is why the site defaults to the midterm view.</li>
         </ul>
-        <p>Reproducible build: <a href="https://github.com/snmash/VoteCalculator/blob/main/scripts/build_data.py" target="_blank" rel="noopener"><code>scripts/build_data.py</code></a> on GitHub.</p>
+        <p>Reproducible build: <a href="https://github.com/snmash/VoteCalculator/tree/main/scripts" target="_blank" rel="noopener"><code>scripts/</code></a> on GitHub (<code>build_2022.py</code>, then <code>build_data.py</code>).</p>
 
         <h3>Sources</h3>
         <ul>
             <li>MIT Election Data and Science Lab, 2018, &ldquo;County Presidential Election Returns 2000&ndash;2024,&rdquo; Harvard Dataverse, <a href="https://doi.org/10.7910/DVN/VOQCHQ" target="_blank" rel="noopener">doi:10.7910/DVN/VOQCHQ</a> (version 2026-02-25).</li>
+            <li>MIT Election Data and Science Lab, &ldquo;2022 General Election Precinct-Level Returns,&rdquo; <a href="https://github.com/MEDSL/2022-elections-official" target="_blank" rel="noopener">github.com/MEDSL/2022-elections-official</a> (accessed October 2026).</li>
+            <li>2022 county totals for Indiana (U.S. Senate), Phillips County, AR and Power County, ID (governor), taken from Wikipedia&rsquo;s county results tables of the certified results and cross-checked against MEDSL counties where both exist; see <a href="https://github.com/snmash/VoteCalculator/blob/main/scripts/county_votes_2022_fill.csv" target="_blank" rel="noopener"><code>county_votes_2022_fill.csv</code></a>.</li>
             <li>U.S. Census Bureau, &ldquo;<a href="https://www.census.gov/programs-surveys/decennial-census/about/voting-rights/cvap/2020-2024-CVAP.html" target="_blank" rel="noopener">Citizen Voting Age Population by Race and Ethnicity, 2020&ndash;2024</a>,&rdquo; ACS 5-year special tabulation.</li>
         </ul>
     </section>
@@ -252,8 +294,22 @@
 
     const CAVEATS = {
         "small-population": "This county has a small population, so the Census estimate of eligible citizens has a wide margin of error. Treat this figure as approximate.",
-        "ineligible-residents": "Turnout here may look low partly because Census counts residents who can't vote locally, such as people in prison or military personnel registered in another state. <a href=\"#methodology\">See methodology</a>."
+        "ineligible-residents": "Turnout here may look low partly because Census counts residents who don't vote locally, such as people in prison, or military personnel and college students registered in another state. <a href=\"#methodology\">See methodology</a>."
     };
+
+    const ELECTIONS = {
+        "2022": {
+            label: "2022 midterm election",
+            hint: "2026 is a midterm year &mdash; turnout is typically much lower.",
+            data: "2022 county results (highest office), MIT Election Data and Science Lab"
+        },
+        "2024": {
+            label: "2024 presidential election",
+            hint: "Presidential years bring out the most voters.",
+            data: "2024 county presidential returns, MIT Election Data and Science Lab"
+        }
+    };
+    let selectedElection = "2022";
 
     const stateCountyData = {};
 
@@ -287,10 +343,12 @@
                 if (!stateCountyData[state]) {
                     stateCountyData[state] = [];
                 }
+                const turnout22 = parseFloat((row['Voter Turnout 2022'] || '').replace('%', ''));
+                const votePower22 = parseFloat(row['Vote Power 2022']);
                 stateCountyData[state].push({
                     county: county,
-                    turnout: turnout,
-                    vote_power: votePower,
+                    "2024": { turnout: turnout, vote_power: votePower },
+                    "2022": isNaN(turnout22) || isNaN(votePower22) ? null : { turnout: turnout22, vote_power: votePower22 },
                     notes: (row['Note'] || '').split(';').filter(Boolean)
                 });
             });
@@ -350,24 +408,46 @@
         calculateButton.disabled = this.value === "";
     });
 
-    calculateButton.addEventListener('click', function() {
+    let hasResult = false;
+
+    document.querySelectorAll('.election-toggle button').forEach(btn => {
+        btn.addEventListener('click', function() {
+            selectedElection = this.dataset.election;
+            document.querySelectorAll('.election-toggle button').forEach(b => {
+                const on = b === this;
+                b.classList.toggle('active', on);
+                b.setAttribute('aria-pressed', on ? 'true' : 'false');
+            });
+            document.getElementById('toggle-hint').innerHTML = ELECTIONS[selectedElection].hint;
+            if (hasResult) {
+                renderResult();
+            }
+        });
+    });
+
+    calculateButton.addEventListener('click', renderResult);
+
+    function renderResult() {
         const state = stateSelect.value;
         const county = countySelect.value;
-        const countyData = stateCountyData[state].find(entry => entry.county === county);
+        const countyData = state && stateCountyData[state] ? stateCountyData[state].find(entry => entry.county === county) : null;
+        const election = ELECTIONS[selectedElection];
+        const figures = countyData ? countyData[selectedElection] : null;
 
-        if (!countyData) {
-            resultContainer.textContent = `Sorry, we couldn't find data for ${county}, ${stateLabel(state)}. Please try another selection.`;
+        if (!countyData || !figures) {
+            resultContainer.textContent = `Sorry, we don't have ${election.label} data for ${county}, ${stateLabel(state)}. Please try another selection.`;
             socialShareContainer.style.display = 'none';
             return;
         }
+        hasResult = true;
 
-        const vp = countyData.vote_power.toFixed(1);
-        const turnout = countyData.turnout.toFixed(1);
+        const vp = figures.vote_power.toFixed(1);
+        const turnout = figures.turnout.toFixed(1);
         const place = countyData.county.startsWith('Statewide') ? stateLabel(state) : `${county}, ${stateLabel(state)}`;
 
         resultContainer.innerHTML =
             `Your vote counts for <strong>${vp}</strong> eligible voters!<br><br>` +
-            `What does this mean? <strong>${turnout}%</strong> of eligible citizens in ${place} voted in the 2024 presidential election, ` +
+            `What does this mean? <strong>${turnout}%</strong> of eligible citizens in ${place} voted in the ${election.label}, ` +
             `so each ballot cast spoke for ${vp} people. Now make that vote count, ` +
             `<a href="https://www.vote.org" target="_blank" rel="noopener">register and vote today!</a>`;
 
@@ -382,13 +462,14 @@
 
         const footnote = document.createElement('div');
         footnote.className = 'footnote';
-        footnote.innerHTML = 'Data: 2024 county presidential returns, MIT Election Data and Science Lab; ' +
+        footnote.innerHTML = `Data: ${election.data}; ` +
             'citizen voting-age population, Census 2020&ndash;2024 ACS 5-year estimates. <a href="#methodology">Methodology</a>';
         resultContainer.appendChild(footnote);
 
         socialShareContainer.style.display = 'block';
 
-        const shareText = `I just discovered my voting power in ${place}! I'm voting on behalf of ${vp} eligible voters. Find out yours at https://votepower.us/`;
+        const basis = selectedElection === "2022" ? "midterm" : "presidential";
+        const shareText = `I just discovered my voting power in ${place}! Based on ${basis} turnout, I'm voting on behalf of ${vp} eligible voters. Find out yours at https://votepower.us/`;
         const encoded = encodeURIComponent(shareText);
         document.getElementById('facebook-share').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://votepower.us/')}&quote=${encoded}`;
         document.getElementById('x-share').href = `https://twitter.com/intent/tweet?text=${encoded}`;
@@ -404,7 +485,7 @@
             }
         };
         ig.title = 'Copies your result so you can paste it into Instagram';
-    });
+    }
     </script>
 </body>
 </html>

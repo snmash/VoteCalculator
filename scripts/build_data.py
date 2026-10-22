@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Rebuild voter_turnout_data.csv for votepower.us.
 
+Also reads scripts/county_votes_2022.csv (committed; produced by
+scripts/build_2022.py from MEDSL 2022 precinct returns) for the midterm view.
+
 Inputs (not committed; download from the sources below):
   --medsl  countypres_2000-2024.csv  MIT Election Data and Science Lab,
            "County Presidential Election Returns 2000-2024",
@@ -33,7 +36,8 @@ from collections import defaultdict
 
 YEAR = "2024"
 LOW_TURNOUT_FLAG = 40.0   # % — often driven by prison/military populations
-MOE_FLAG = 0.10           # CVAP margin of error > 10% of the estimate
+LOW_TURNOUT_FLAG_2022 = 25.0  # % — midterm equivalent of the flag above
+MOE_FLAG = 0.10          # CVAP margin of error > 10% of the estimate
 
 STATE_FIPS = {
     "01": "AL", "02": "AK", "04": "AZ", "05": "AR", "06": "CA", "08": "CO",
@@ -88,6 +92,19 @@ def load_votes(medsl_path):
     return votes, names
 
 
+def load_votes_2022(path):
+    """Return {fips: total votes, highest office} from scripts/build_2022.py output."""
+    votes = {}
+    with open(path, newline="") as f:
+        for row in csv.DictReader(f):
+            votes[row["fips"].zfill(5)] = int(row["total_votes_2022"])
+    if "36000" in votes:
+        votes["29095"] = votes.get("29095", 0) + votes.pop("36000")
+    if "46113" in votes:
+        votes["46102"] = votes.pop("46113")
+    return votes
+
+
 def load_cvap(cvap_dir, ct_crosswalk):
     """Return {fips: (name, cvap_est, cvap_moe)} for counties, with CT
     rebuilt on historical counties from town-level data."""
@@ -138,10 +155,12 @@ def main():
     ap.add_argument("--medsl", required=True)
     ap.add_argument("--cvap-dir", required=True)
     ap.add_argument("--ct-crosswalk", default=os.path.join(os.path.dirname(__file__), "ct_town_county.csv"))
+    ap.add_argument("--votes-2022", default=os.path.join(os.path.dirname(__file__), "county_votes_2022.csv"))
     ap.add_argument("--out", default="voter_turnout_data.csv")
     args = ap.parse_args()
 
     votes, _ = load_votes(args.medsl)
+    votes22 = load_votes_2022(args.votes_2022)
     cvap = load_cvap(args.cvap_dir, args.ct_crosswalk)
 
     # Alaska: collapse house districts and boroughs to one statewide row.
@@ -162,6 +181,9 @@ def main():
     unmatched_cvap = sorted(set(cvap) - set(votes))
     if unmatched_votes or unmatched_cvap:
         raise ValueError(f"Join failure. votes-only: {unmatched_votes} cvap-only: {unmatched_cvap}")
+    unmatched22 = sorted(set(cvap) ^ set(votes22))
+    if unmatched22:
+        raise ValueError(f"2022 join failure: {unmatched22}")
 
     rows = []
     for fips in cvap:
@@ -175,6 +197,10 @@ def main():
             notes.append("small-population")
         if turnout < LOW_TURNOUT_FLAG:
             notes.append("ineligible-residents")
+        raw22 = 100.0 * votes22[fips] / est
+        turnout22 = min(raw22, 100.0)
+        if turnout22 < LOW_TURNOUT_FLAG_2022 and "ineligible-residents" not in notes:
+            notes.append("ineligible-residents")
         rows.append({
             "State": STATE_FIPS[fips[:2]],
             "County Name": name,
@@ -185,6 +211,9 @@ def main():
             "CVAP 2020-2024": est,
             "CVAP MOE": moe,
             "Note": ";".join(dict.fromkeys(notes)),
+            "Vote Power 2022": f"{100.0 / turnout22:.1f}",
+            "Voter Turnout 2022": f"{turnout22:.1f}%",
+            "Total Votes 2022": votes22[fips],
         })
     rows.sort(key=lambda r: (r["State"], r["County Name"]))
 

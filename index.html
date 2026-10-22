@@ -4,25 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>How Many Votes Am I Worth?</title>
+    <meta name="description" content="Find out how powerful your vote is based on 2024 county voter turnout data. Make your vote count today!">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-VGYJ2GP82F"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VGYJ2GP82F"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-VGYJ2GP82F');
+    </script>
 
-  gtag('config', 'G-VGYJ2GP82F');
-</script>
-    
-    
     <style>
         body {
             font-family: 'Roboto', sans-serif;
             background-color: #f5f5f5;
             color: #333;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             min-height: 100vh;
             margin: 0;
@@ -37,6 +36,7 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             max-width: 500px;
             width: 100%;
+            box-sizing: border-box;
         }
         h1 {
             font-size: 2em;
@@ -56,16 +56,32 @@
             cursor: pointer;
             border-radius: 5px;
         }
-        button:hover {
+        button:hover:not(:disabled) {
             transform: scale(1.05);
             transition: all 0.3s ease;
             background-color: #005a99;
+        }
+        button:disabled {
+            background-color: #9cc3e0;
+            cursor: default;
         }
         .result {
             margin-top: 20px;
             font-size: 1.2em;
             padding: 20px;
             border-top: 1px solid #e0e0e0;
+        }
+        .result:empty {
+            display: none;
+        }
+        .caveat {
+            margin-top: 14px;
+            font-size: 0.8em;
+            color: #555;
+            background: #f7f9fb;
+            border-left: 3px solid #007acc;
+            padding: 8px 12px;
+            text-align: left;
         }
         .social-share {
             margin-top: 20px;
@@ -81,16 +97,52 @@
         }
         .footnote {
             margin-top: 20px;
-            font-size: 0.9em;
-            color: #333;
+            font-size: 0.75em;
+            color: #555;
         }
-    </style>
-<style>
         .hero-banner {
             width: 100%;
             max-width: 600px;
             margin-bottom: 20px;
             border-radius: 8px;
+        }
+        .methodology {
+            max-width: 500px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 24px;
+            padding: 24px 28px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            font-size: 0.88em;
+            line-height: 1.55;
+            color: #444;
+        }
+        .methodology h2 {
+            font-size: 1.15em;
+            margin: 0 0 10px;
+            color: #333;
+        }
+        .methodology h3 {
+            font-size: 1em;
+            margin: 16px 0 6px;
+            color: #333;
+        }
+        .methodology p, .methodology ul {
+            margin: 0 0 8px;
+        }
+        .methodology ul {
+            padding-left: 20px;
+        }
+        .methodology code {
+            background: #f1f3f5;
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-size: 0.95em;
+        }
+        .methodology a {
+            color: #007acc;
         }
         @media (max-width: 600px) {
             body {
@@ -98,6 +150,9 @@
             }
             .container {
                 padding: 20px;
+            }
+            .methodology {
+                padding: 18px 16px;
             }
             h1 {
                 font-size: 1.5em;
@@ -108,131 +163,159 @@
             }
         }
     </style>
-    <!-- Add Open Graph Metadata -->
+    <!-- Open Graph -->
     <meta property="og:title" content="How Many Votes Am I Worth?" />
-    <meta property="og:description" content="Find out how powerful your vote is based on historical voter turnout data. Make your vote count today!" />
+    <meta property="og:description" content="Find out how powerful your vote is based on 2024 county voter turnout data. Make your vote count today!" />
     <meta property="og:image" content="https://votepower.us/images/free-us-map-illustration-g0oem.jpg" />
-    <meta property="og:url" content="https://snmash.github.io/VoteCalculator/" />
+    <meta property="og:url" content="https://votepower.us/" />
     <meta property="og:type" content="website" />
-    <!-- Add Twitter Card Metadata -->
+    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="How Many Votes Am I Worth?" />
-    <meta name="twitter:description" content="Find out how powerful your vote is based on historical voter turnout data. Make your vote count today!" />
-    <meta name="twitter:image" content="https://snmash.github.io/VoteCalculator/images/free-us-map-illustration-g0oem.jpg" />
+    <meta name="twitter:description" content="Find out how powerful your vote is based on 2024 county voter turnout data. Make your vote count today!" />
+    <meta name="twitter:image" content="https://votepower.us/images/free-us-map-illustration-g0oem.jpg" />
 </head>
 <body>
     <div class="container">
         <img src="images/free-us-map-illustration-g0oem.jpg" alt="Map of the United States" class="hero-banner">
         <h1>How many votes am I worth?</h1>
         <div class="dropdowns">
-            <select id="state-select">
+            <select id="state-select" aria-label="State">
                 <option value="">Select your state</option>
-                <!-- State options will be populated here dynamically -->
             </select>
-            <select id="county-select" disabled>
+            <select id="county-select" aria-label="County" disabled>
                 <option value="">Select your county</option>
-                <!-- County options will populate after state selection -->
             </select>
         </div>
         <button id="calculate-button" disabled>Calculate!</button>
         <div class="result" id="result-container"></div>
         <div class="social-share" id="social-share-container" style="display: none;">
             <p>Share your voting power:</p>
-            <a href="#" id="facebook-share">Facebook</a>
-            <a href="#" id="instagram-share">Instagram</a>
-            <a href="#" id="x-share">X (Twitter)</a>
-            <a href="#" id="threads-share">Threads</a>
-            <a href="#" id="linkedin-share">LinkedIn</a></div>
-        
-        <p>Created by <a href="https://www.linkedin.com/in/snmahesh/" target="_blank">Steven Maheshwary</a></p>
-        
-    </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-<script>
-    // Load CSV file using PapaParse
-    let stateCountyData = {};
+            <a href="#" id="facebook-share" target="_blank" rel="noopener">Facebook</a>
+            <a href="#" id="instagram-share" target="_blank" rel="noopener">Instagram</a>
+            <a href="#" id="x-share" target="_blank" rel="noopener">X (Twitter)</a>
+            <a href="#" id="threads-share" target="_blank" rel="noopener">Threads</a>
+            <a href="#" id="linkedin-share" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
 
-    Papa.parse("https://raw.githubusercontent.com/snmash/VoteCalculator/refs/heads/main/voter_turnout_data.csv", {
+        <p>Created by <a href="https://www.linkedin.com/in/snmahesh/" target="_blank" rel="noopener">Steven Maheshwary</a></p>
+    </div>
+
+    <section class="methodology" id="methodology">
+        <h2>Methodology</h2>
+        <p><strong>Vote Power</strong> is the number of eligible citizens in your county for every person who actually voted: <code>Vote Power = eligible citizens &divide; votes cast = 100 &divide; turnout %</code>. A Vote Power of 2.0 means only half of eligible citizens voted, so each ballot cast spoke for two people.</p>
+
+        <h3>Data</h3>
+        <ul>
+            <li><strong>Votes cast:</strong> total votes for U.S. President in the November 2024 general election, by county, from official state records compiled by the MIT Election Data and Science Lab.</li>
+            <li><strong>Eligible citizens:</strong> citizen voting-age population (CVAP), 2020&ndash;2024 American Community Survey 5-year estimates, U.S. Census Bureau special tabulation (released January 2026).</li>
+        </ul>
+
+        <h3>Adjustments</h3>
+        <ul>
+            <li><strong>Connecticut:</strong> election results are reported for the 8 historical counties, while Census now uses 9 planning regions. Town-level CVAP is summed back to the historical counties.</li>
+            <li><strong>Alaska:</strong> results are reported by state house district, which doesn&rsquo;t line up with boroughs, so Alaska is shown as one statewide figure.</li>
+            <li><strong>Kansas City, MO</strong> votes (reported separately by its election board) are included in Jackson County. <strong>Kalawao County, HI</strong> is combined with Maui County, where its votes are counted.</li>
+        </ul>
+
+        <h3>Caveats</h3>
+        <ul>
+            <li><strong>Turnout is slightly understated.</strong> Ballots that skipped the presidential race are not counted.</li>
+            <li><strong>Small counties are noisy.</strong> Census survey estimates for counties with a few thousand residents carry wide margins of error. Results above 100% are capped at 100%.</li>
+            <li><strong>Some counties include residents who can&rsquo;t vote there.</strong> CVAP counts incarcerated people (ineligible in most states), military personnel registered in their home states, and students registered elsewhere. Counties with large prisons or bases can show artificially low turnout and high Vote Power.</li>
+            <li><strong>Midterms are different.</strong> Turnout in midterm years, such as 2026, typically runs well below presidential years, so your vote likely carries even more weight in a midterm than shown here.</li>
+        </ul>
+        <p>Reproducible build: <a href="https://github.com/snmash/VoteCalculator/blob/main/scripts/build_data.py" target="_blank" rel="noopener"><code>scripts/build_data.py</code></a> on GitHub.</p>
+
+        <h3>Sources</h3>
+        <ul>
+            <li>MIT Election Data and Science Lab, 2018, &ldquo;County Presidential Election Returns 2000&ndash;2024,&rdquo; Harvard Dataverse, <a href="https://doi.org/10.7910/DVN/VOQCHQ" target="_blank" rel="noopener">doi:10.7910/DVN/VOQCHQ</a> (version 2026-02-25).</li>
+            <li>U.S. Census Bureau, &ldquo;<a href="https://www.census.gov/programs-surveys/decennial-census/about/voting-rights/cvap/2020-2024-CVAP.html" target="_blank" rel="noopener">Citizen Voting Age Population by Race and Ethnicity, 2020&ndash;2024</a>,&rdquo; ACS 5-year special tabulation.</li>
+        </ul>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script>
+    const STATE_NAMES = {
+        AL: "Alabama", AK: "Alaska", AZ: "Arizona", AR: "Arkansas", CA: "California",
+        CO: "Colorado", CT: "Connecticut", DE: "Delaware", DC: "District of Columbia",
+        FL: "Florida", GA: "Georgia", HI: "Hawaii", ID: "Idaho", IL: "Illinois",
+        IN: "Indiana", IA: "Iowa", KS: "Kansas", KY: "Kentucky", LA: "Louisiana",
+        ME: "Maine", MD: "Maryland", MA: "Massachusetts", MI: "Michigan", MN: "Minnesota",
+        MS: "Mississippi", MO: "Missouri", MT: "Montana", NE: "Nebraska", NV: "Nevada",
+        NH: "New Hampshire", NJ: "New Jersey", NM: "New Mexico", NY: "New York",
+        NC: "North Carolina", ND: "North Dakota", OH: "Ohio", OK: "Oklahoma", OR: "Oregon",
+        PA: "Pennsylvania", RI: "Rhode Island", SC: "South Carolina", SD: "South Dakota",
+        TN: "Tennessee", TX: "Texas", UT: "Utah", VT: "Vermont", VA: "Virginia",
+        WA: "Washington", WV: "West Virginia", WI: "Wisconsin", WY: "Wyoming"
+    };
+
+    const CAVEATS = {
+        "small-population": "This county has a small population, so the Census estimate of eligible citizens has a wide margin of error. Treat this figure as approximate.",
+        "ineligible-residents": "Turnout here may look low partly because Census counts residents who can't vote locally, such as people in prison or military personnel registered in another state. <a href=\"#methodology\">See methodology</a>."
+    };
+
+    const stateCountyData = {};
+
+    Papa.parse("voter_turnout_data.csv", {
         download: true,
         header: true,
-        skipEmptyLines: true, // Skip empty rows
+        skipEmptyLines: true,
         complete: function(results) {
             if (results.errors.length > 0) {
                 console.error("Errors while parsing CSV:", results.errors);
-                results.errors.forEach(error => {
-                    console.warn(`Row ${error.row} had an error: ${error.message}`);
-                });
             }
 
             results.data.forEach((row, index) => {
-                // Stop processing if we reach beyond row 3112
-                if (index >= 3112) {
-                    return;
-                }
-
-                // Ensure that the row has all the expected fields
-                if (Object.keys(row).length < 5) {
-                    console.warn(`Skipping row ${index + 1} due to insufficient fields: ${JSON.stringify(row)}`);
-                    return;
-                }
-
-                // Ensure the necessary fields are present before proceeding
                 const state = row['State'];
                 const county = row['County Name'];
                 const turnoutStr = row['Voter Turnout'] ? row['Voter Turnout'].replace('%', '') : null;
                 const votePowerStr = row['Vote Power'];
 
                 if (!state || !county || !turnoutStr || !votePowerStr) {
-                    // If any required data is missing, skip this row
-                    console.warn(`Skipping row ${index + 1} due to missing data: ${JSON.stringify(row)}`);
+                    console.warn(`Skipping row ${index + 1} due to missing data`, row);
                     return;
                 }
 
-                // Safely parse the turnout and vote power
                 const turnout = parseFloat(turnoutStr);
                 const votePower = parseFloat(votePowerStr);
-
-                // If parsing fails (i.e., resulting in NaN), skip this row
                 if (isNaN(turnout) || isNaN(votePower)) {
-                    console.warn(`Skipping row ${index + 1} due to NaN value: ${JSON.stringify(row)}`);
+                    console.warn(`Skipping row ${index + 1} due to NaN value`, row);
                     return;
                 }
 
-                // Initialize the state entry if it doesn't exist
                 if (!stateCountyData[state]) {
                     stateCountyData[state] = [];
                 }
-
-                // Add county data
                 stateCountyData[state].push({
                     county: county,
                     turnout: turnout,
-                    vote_power: votePower
+                    vote_power: votePower,
+                    notes: (row['Note'] || '').split(';').filter(Boolean)
                 });
             });
 
-            // Populate state dropdown after data has loaded
             populateStates();
         },
         error: function(error) {
-            console.error("Error parsing CSV:", error);
+            console.error("Error loading CSV:", error);
         }
     });
 
-    // Populate state dropdown
+    function stateLabel(code) {
+        return STATE_NAMES[code] || code;
+    }
+
     function populateStates() {
         const stateSelect = document.getElementById('state-select');
-        if (Object.keys(stateCountyData).length === 0) {
-            console.error("No state data available to populate dropdown.");
-            return;
-        }
-
-        for (let state in stateCountyData) {
-            let option = document.createElement('option');
-            option.value = state;
-            option.textContent = state;
-            stateSelect.appendChild(option);
-        }
+        Object.keys(stateCountyData)
+            .sort((a, b) => stateLabel(a).localeCompare(stateLabel(b)))
+            .forEach(state => {
+                const option = document.createElement('option');
+                option.value = state;
+                option.textContent = stateLabel(state);
+                stateSelect.appendChild(option);
+            });
     }
 
     const stateSelect = document.getElementById('state-select');
@@ -241,55 +324,87 @@
     const resultContainer = document.getElementById('result-container');
     const socialShareContainer = document.getElementById('social-share-container');
 
-    // Enable and populate county dropdown based on state selection
     stateSelect.addEventListener('change', function() {
         const selectedState = this.value;
         countySelect.innerHTML = '<option value="">Select your county</option>';
         countySelect.disabled = selectedState === "";
+        calculateButton.disabled = true;
 
         if (selectedState) {
-            stateCountyData[selectedState].forEach(entry => {
-                let option = document.createElement('option');
+            const counties = stateCountyData[selectedState];
+            counties.forEach(entry => {
+                const option = document.createElement('option');
                 option.value = entry.county;
                 option.textContent = entry.county;
                 countySelect.appendChild(option);
             });
+            // Single-row states (DC, Alaska): preselect it.
+            if (counties.length === 1) {
+                countySelect.value = counties[0].county;
+                calculateButton.disabled = false;
+            }
         }
     });
 
-    // Enable calculate button once a county is selected
     countySelect.addEventListener('change', function() {
         calculateButton.disabled = this.value === "";
     });
 
-    // Calculate voting power when button is clicked
     calculateButton.addEventListener('click', function() {
         const state = stateSelect.value;
         const county = countySelect.value;
-
         const countyData = stateCountyData[state].find(entry => entry.county === county);
 
-        if (countyData) {
-            resultContainer.innerHTML = `Your vote counts for <strong>${countyData.vote_power.toFixed(1)}</strong> voters!<br><br>What does this mean? Your vote may be more powerful than you realize because only <strong>${countyData.turnout.toFixed(1)}%</strong> of voters have historically voted in your county. Now make that vote count, <a href="https://www.vote.org" target="_blank">register and vote today!</a>`;
-            socialShareContainer.style.display = 'block';
-            socialShareContainer.style.marginTop = '10px';
-            socialShareContainer.style.display = 'block';
-            // Show the footnote after calculation
-            const footnote = document.createElement('div');
-            footnote.className = 'footnote';
-            footnote.innerHTML = 'Data sources: 2016-2020 voter and eligibility data from MIT Election Data and Science Labs; Census American Community Survey 5-Year Estimates';
-            resultContainer.appendChild(footnote);
-
-            // Update social media share links
-            const shareText = `I just discovered my voting power in ${county}, ${state}! I'm voting on behalf of ${countyData.vote_power.toFixed(1)} eligible voters. Find out yours at https://votepower.us/.`;
-            document.getElementById('facebook-share').href = `https://www.facebook.com/sharer/sharer.php?u=https://votepower.us/&quote=${encodeURIComponent(shareText)}`;
-            document.getElementById('instagram-share').href = `https://www.instagram.com/`; // Instagram does not support direct share links, encourage users to copy/share manually.
-            document.getElementById('x-share').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
-            document.getElementById('threads-share').href = `https://www.threads.net/`; // Threads does not yet have direct share URL schemes.
-            document.getElementById('linkedin-share').href = `https://www.linkedin.com/sharing/share-offsite/?url=https://votepower.us/&summary=${encodeURIComponent(shareText)}`;
-        } else {
-            resultContainer.innerHTML = `Sorry, we couldn't find data for ${county}, ${state}. Please try another selection.`;
+        if (!countyData) {
+            resultContainer.textContent = `Sorry, we couldn't find data for ${county}, ${stateLabel(state)}. Please try another selection.`;
+            socialShareContainer.style.display = 'none';
+            return;
         }
+
+        const vp = countyData.vote_power.toFixed(1);
+        const turnout = countyData.turnout.toFixed(1);
+        const place = countyData.county.startsWith('Statewide') ? stateLabel(state) : `${county}, ${stateLabel(state)}`;
+
+        resultContainer.innerHTML =
+            `Your vote counts for <strong>${vp}</strong> eligible voters!<br><br>` +
+            `What does this mean? <strong>${turnout}%</strong> of eligible citizens in ${place} voted in the 2024 presidential election, ` +
+            `so each ballot cast spoke for ${vp} people. Now make that vote count, ` +
+            `<a href="https://www.vote.org" target="_blank" rel="noopener">register and vote today!</a>`;
+
+        countyData.notes.forEach(note => {
+            if (CAVEATS[note]) {
+                const div = document.createElement('div');
+                div.className = 'caveat';
+                div.innerHTML = CAVEATS[note];
+                resultContainer.appendChild(div);
+            }
+        });
+
+        const footnote = document.createElement('div');
+        footnote.className = 'footnote';
+        footnote.innerHTML = 'Data: 2024 county presidential returns, MIT Election Data and Science Lab; ' +
+            'citizen voting-age population, Census 2020&ndash;2024 ACS 5-year estimates. <a href="#methodology">Methodology</a>';
+        resultContainer.appendChild(footnote);
+
+        socialShareContainer.style.display = 'block';
+
+        const shareText = `I just discovered my voting power in ${place}! I'm voting on behalf of ${vp} eligible voters. Find out yours at https://votepower.us/`;
+        const encoded = encodeURIComponent(shareText);
+        document.getElementById('facebook-share').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://votepower.us/')}&quote=${encoded}`;
+        document.getElementById('x-share').href = `https://twitter.com/intent/tweet?text=${encoded}`;
+        document.getElementById('threads-share').href = `https://www.threads.net/intent/post?text=${encoded}`;
+        document.getElementById('linkedin-share').href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://votepower.us/')}`;
+
+        // Instagram has no share URL; copy the text so it can be pasted into a story or post.
+        const ig = document.getElementById('instagram-share');
+        ig.href = 'https://www.instagram.com/';
+        ig.onclick = function() {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(shareText).catch(() => {});
+            }
+        };
+        ig.title = 'Copies your result so you can paste it into Instagram';
     });
-</script>
-</body
+    </script>
+</body>
+</html>

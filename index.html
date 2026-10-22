@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>How Many Votes Am I Worth?</title>
-    <meta name="description" content="Find out how powerful your vote is based on 2022 midterm and 2024 presidential county turnout. Make your vote count today!">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    <title>How many people are you voting for? · votepower</title>
+    <meta name="description" content="In low-turnout counties, every ballot speaks for more than one person. Find out how many people you're voting for, based on real county turnout.">
+    <meta name="theme-color" content="#FFD23F">
+    <link rel="preload" href="fonts/anton-400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/archivo-700.woff2" as="font" type="font/woff2" crossorigin>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-VGYJ2GP82F"></script>
     <script>
@@ -15,269 +17,349 @@
       gtag('config', 'G-VGYJ2GP82F');
     </script>
 
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        .container {
-            text-align: center;
-            background: #fff;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        h1 {
-            font-size: 2em;
-            margin-bottom: 20px;
-        }
-        select, button {
-            padding: 10px;
-            font-size: 1em;
-            margin: 10px;
-            width: calc(100% - 22px);
-            max-width: 300px;
-        }
-        button {
-            background-color: #007acc;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        button:hover:not(:disabled) {
-            transform: scale(1.05);
-            transition: all 0.3s ease;
-            background-color: #005a99;
-        }
-        button:disabled {
-            background-color: #9cc3e0;
-            cursor: default;
-        }
-        .election-toggle {
-            display: inline-flex;
-            border: 1px solid #007acc;
-            border-radius: 6px;
-            overflow: hidden;
-            margin: 0 0 6px;
-        }
-        .election-toggle button {
-            margin: 0;
-            width: auto;
-            max-width: none;
-            border-radius: 0;
-            background: #fff;
-            color: #007acc;
-            padding: 8px 14px;
-            font-size: 0.9em;
-        }
-        .election-toggle button.active {
-            background: #007acc;
-            color: #fff;
-        }
-        .election-toggle button:hover:not(:disabled) {
-            transform: none;
-            background: #e6f2fa;
-        }
-        .election-toggle button.active:hover {
-            background: #005a99;
-        }
-        .toggle-hint {
-            font-size: 0.8em;
-            color: #666;
-            margin: 0 0 8px;
-        }
-        .result {
-            margin-top: 20px;
-            font-size: 1.2em;
-            padding: 20px;
-            border-top: 1px solid #e0e0e0;
-        }
-        .result:empty {
-            display: none;
-        }
-        .caveat {
-            margin-top: 14px;
-            font-size: 0.8em;
-            color: #555;
-            background: #f7f9fb;
-            border-left: 3px solid #007acc;
-            padding: 8px 12px;
-            text-align: left;
-        }
-        .social-share {
-            margin-top: 20px;
-        }
-        .social-share a {
-            margin: 0 10px;
-            text-decoration: none;
-            color: #007acc;
-            font-weight: bold;
-        }
-        .social-share a:hover {
-            text-decoration: underline;
-        }
-        .footnote {
-            margin-top: 20px;
-            font-size: 0.75em;
-            color: #555;
-        }
-        .hero-banner {
-            width: 100%;
-            max-width: 600px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-        }
-        .methodology {
-            max-width: 500px;
-            width: 100%;
-            box-sizing: border-box;
-            margin-top: 24px;
-            padding: 24px 28px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-            font-size: 0.88em;
-            line-height: 1.55;
-            color: #444;
-        }
-        .methodology h2 {
-            font-size: 1.15em;
-            margin: 0 0 10px;
-            color: #333;
-        }
-        .methodology h3 {
-            font-size: 1em;
-            margin: 16px 0 6px;
-            color: #333;
-        }
-        .methodology p, .methodology ul {
-            margin: 0 0 8px;
-        }
-        .methodology ul {
-            padding-left: 20px;
-        }
-        .methodology code {
-            background: #f1f3f5;
-            padding: 1px 4px;
-            border-radius: 3px;
-            font-size: 0.95em;
-        }
-        .methodology a {
-            color: #007acc;
-        }
-        @media (max-width: 600px) {
-            body {
-                padding: 10px;
-            }
-            .container {
-                padding: 20px;
-            }
-            .methodology {
-                padding: 18px 16px;
-            }
-            h1 {
-                font-size: 1.5em;
-            }
-            select, button {
-                font-size: 0.9em;
-                padding: 8px;
-            }
-        }
-    </style>
     <!-- Open Graph -->
-    <meta property="og:title" content="How Many Votes Am I Worth?" />
-    <meta property="og:description" content="Find out how powerful your vote is based on 2022 midterm and 2024 presidential county turnout. Make your vote count today!" />
-    <meta property="og:image" content="https://votepower.us/images/free-us-map-illustration-g0oem.jpg" />
+    <meta property="og:title" content="How many people are you voting for?" />
+    <meta property="og:description" content="In low-turnout counties, every ballot speaks for more than one person. Find out your number." />
+    <meta property="og:image" content="https://votepower.us/og/default.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:url" content="https://votepower.us/" />
     <meta property="og:type" content="website" />
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="How Many Votes Am I Worth?" />
-    <meta name="twitter:description" content="Find out how powerful your vote is based on 2022 midterm and 2024 presidential county turnout. Make your vote count today!" />
-    <meta name="twitter:image" content="https://votepower.us/images/free-us-map-illustration-g0oem.jpg" />
+    <meta name="twitter:title" content="How many people are you voting for?" />
+    <meta name="twitter:description" content="In low-turnout counties, every ballot speaks for more than one person. Find out your number." />
+    <meta name="twitter:image" content="https://votepower.us/og/default.png" />
+
+    <style>
+        @font-face { font-family: 'Anton'; src: url('fonts/anton-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+        @font-face { font-family: 'Archivo'; src: url('fonts/archivo-500.woff2') format('woff2'); font-weight: 500; font-display: swap; }
+        @font-face { font-family: 'Archivo'; src: url('fonts/archivo-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+        @font-face { font-family: 'Archivo'; src: url('fonts/archivo-800.woff2') format('woff2'); font-weight: 800; font-display: swap; }
+        @font-face { font-family: 'Bricolage Grotesque'; src: url('fonts/bricolage-800.woff2') format('woff2'); font-weight: 800; font-display: swap; }
+
+        :root {
+            --ground: #FFD23F;
+            --ink: #17112E;
+            --ink-soft: #3A3255;
+            --line: #4A4170;
+            --paper: #FFFFFF;
+            --card-text: #FFFFFF;
+            --card-muted: #CFC8EA;
+        }
+        * { box-sizing: border-box; }
+        html { -webkit-text-size-adjust: 100%; }
+        body {
+            margin: 0;
+            background: var(--ground);
+            color: var(--ink);
+            font-family: 'Archivo', system-ui, -apple-system, sans-serif;
+            font-weight: 500;
+        }
+        a { color: var(--ink); }
+        a:hover { color: #000; }
+        .wrap {
+            max-width: 460px;
+            margin: 0 auto;
+            padding: 18px 16px 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        header.top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .wordmark {
+            font-family: 'Anton', Impact, sans-serif;
+            font-size: 24px;
+            letter-spacing: 0.01em;
+            text-decoration: none;
+            color: var(--ink);
+        }
+        .toggle { display: flex; gap: 6px; }
+        .toggle button {
+            min-height: 40px;
+            padding: 0 14px;
+            border-radius: 999px;
+            border: 2px solid var(--ink);
+            background: transparent;
+            color: var(--ink);
+            font: 700 14px 'Archivo', sans-serif;
+            cursor: pointer;
+        }
+        .toggle button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+        .toggle button:focus-visible, .picker select:focus-visible, .actions button:focus-visible, .actions a:focus-visible {
+            outline: 3px solid var(--ink);
+            outline-offset: 2px;
+        }
+        .hint { margin: -6px 0 0; font-size: 13px; font-weight: 700; color: var(--ink-soft); }
+
+        .picker {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+            gap: 8px;
+        }
+        .picker label {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .picker select {
+            width: 100%;
+            height: 48px;
+            border: 2px solid var(--ink);
+            border-radius: 14px;
+            background: var(--paper);
+            color: var(--ink);
+            font: 700 16px 'Archivo', sans-serif;
+            padding: 0 10px;
+        }
+        .picker select:disabled { opacity: 0.55; }
+
+        .card {
+            background: var(--ink);
+            color: var(--card-text);
+            border-radius: 28px;
+            padding: 26px 24px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            min-height: 520px;
+        }
+        .headline { display: flex; flex-direction: column; }
+        .headline .lead, .headline .unit {
+            font-family: 'Anton', Impact, sans-serif;
+            font-size: 34px;
+            line-height: 1;
+            letter-spacing: 0.01em;
+            text-transform: uppercase;
+        }
+        .headline .num {
+            font-family: 'Anton', Impact, sans-serif;
+            font-size: clamp(150px, 48vw, 196px);
+            line-height: 0.95;
+            color: var(--ground);
+            letter-spacing: -0.01em;
+        }
+        .people { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+        .people svg { flex: none; }
+        .people .caption { font-size: 16px; font-weight: 700; line-height: 1.3; }
+        .stat { margin: 0; font-size: 16px; line-height: 1.45; }
+        .rank { margin: 0; font-size: 14px; font-weight: 700; color: var(--card-muted); }
+        .card-foot {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--line);
+            padding-top: 12px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+        .card-foot .url { color: var(--ground); }
+        .caveat {
+            font-size: 13px;
+            line-height: 1.4;
+            color: var(--ink);
+            background: rgba(255, 255, 255, 0.55);
+            border-radius: 14px;
+            padding: 10px 12px;
+            margin: 0;
+        }
+
+        .actions {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 54px 54px;
+            gap: 8px;
+        }
+        .actions button {
+            height: 54px;
+            border-radius: 16px;
+            border: 2px solid var(--ink);
+            background: transparent;
+            color: var(--ink);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font: 800 16px 'Archivo', sans-serif;
+            cursor: pointer;
+        }
+        .actions .primary { background: var(--ink); color: #fff; }
+        .actions button:disabled { opacity: 0.45; cursor: default; }
+        .social {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        .social a { padding: 6px 2px; }
+        .cta {
+            text-align: center;
+            font-size: 15px;
+            font-weight: 800;
+            padding: 6px 0;
+        }
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 24px;
+            transform: translateX(-50%);
+            background: var(--ink);
+            color: #fff;
+            padding: 12px 18px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 14px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            max-width: calc(100% - 32px);
+            text-align: center;
+        }
+        .toast.show { opacity: 1; }
+        .credit { text-align: center; font-size: 13px; margin: 4px 0 0; }
+
+        .methodology {
+            background: var(--paper);
+            border-radius: 22px;
+            padding: 22px 20px;
+            font-size: 14px;
+            line-height: 1.55;
+            color: #2B2640;
+            margin-top: 10px;
+        }
+        .methodology h2 { font-family: 'Anton', Impact, sans-serif; font-weight: 400; font-size: 26px; margin: 0 0 10px; color: var(--ink); letter-spacing: 0.01em; }
+        .methodology h3 { font-size: 15px; font-weight: 800; margin: 16px 0 6px; color: var(--ink); }
+        .methodology p, .methodology ul { margin: 0 0 8px; }
+        .methodology ul { padding-left: 20px; }
+        .methodology code { background: #F1EEF8; padding: 1px 4px; border-radius: 4px; font-size: 0.92em; }
+        .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+        @media (min-width: 720px) {
+            .wrap { padding-top: 28px; }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <img src="images/free-us-map-illustration-g0oem.jpg" alt="Map of the United States" class="hero-banner">
-        <h1>How many votes am I worth?</h1>
-        <div class="election-toggle" role="group" aria-label="Election type">
-            <button type="button" data-election="2022" class="active" aria-pressed="true">Midterm (2022)</button>
-            <button type="button" data-election="2024" aria-pressed="false">Presidential (2024)</button>
-        </div>
-        <p class="toggle-hint" id="toggle-hint">2026 is a midterm year &mdash; turnout is typically much lower.</p>
-        <div class="dropdowns">
-            <select id="state-select" aria-label="State">
-                <option value="">Select your state</option>
-            </select>
-            <select id="county-select" aria-label="County" disabled>
-                <option value="">Select your county</option>
-            </select>
-        </div>
-        <button id="calculate-button" disabled>Calculate!</button>
-        <div class="result" id="result-container"></div>
-        <div class="social-share" id="social-share-container" style="display: none;">
-            <p>Share your voting power:</p>
-            <a href="#" id="facebook-share" target="_blank" rel="noopener">Facebook</a>
-            <a href="#" id="instagram-share" target="_blank" rel="noopener">Instagram</a>
-            <a href="#" id="x-share" target="_blank" rel="noopener">X (Twitter)</a>
-            <a href="#" id="threads-share" target="_blank" rel="noopener">Threads</a>
-            <a href="#" id="linkedin-share" target="_blank" rel="noopener">LinkedIn</a>
+    <main class="wrap">
+        <header class="top">
+            <a class="wordmark" href="/">VOTEPOWER</a>
+            <div class="toggle" role="group" aria-label="Election type">
+                <button type="button" data-election="2022" aria-pressed="true">Midterm</button>
+                <button type="button" data-election="2024" aria-pressed="false">Presidential</button>
+            </div>
+        </header>
+        <p class="hint" id="toggle-hint">2026 is a midterm year &mdash; turnout is typically much lower.</p>
+
+        <div class="picker">
+            <label for="state-select">State
+                <select id="state-select">
+                    <option value="">Choose</option>
+                </select>
+            </label>
+            <label for="county-select">County
+                <select id="county-select" disabled>
+                    <option value="">Choose</option>
+                </select>
+            </label>
         </div>
 
-        <p>Created by <a href="https://www.linkedin.com/in/snmahesh/" target="_blank" rel="noopener">Steven Maheshwary</a></p>
-    </div>
+        <section class="card" id="card" aria-live="polite">
+            <h1 class="headline">
+                <span class="lead" id="lead">I'm voting for</span>
+                <span class="num" id="num">?</span>
+                <span class="unit">people</span>
+            </h1>
+            <div class="people" id="people">
+                <span class="caption" id="caption">Pick your county to find out.</span>
+            </div>
+            <p class="stat" id="stat">In low-turnout places, every ballot speaks for more than one person.</p>
+            <p class="rank" id="rank" hidden></p>
+            <div class="card-foot">
+                <span>Check yours</span>
+                <span class="url">votepower.us</span>
+            </div>
+        </section>
+        <div id="caveats"></div>
 
-    <section class="methodology" id="methodology">
-        <h2>Methodology</h2>
-        <p><strong>Vote Power</strong> is the number of eligible citizens in your county for every person who actually voted: <code>Vote Power = eligible citizens &divide; votes cast = 100 &divide; turnout %</code>. A Vote Power of 2.0 means only half of eligible citizens voted, so each ballot cast spoke for two people.</p>
+        <div class="actions">
+            <button type="button" class="primary" id="share-btn" disabled>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 8l5-5 5 5M5 14v6h14v-6"></path></svg>
+                Share my number
+            </button>
+            <button type="button" id="copy-btn" aria-label="Copy link" title="Copy link" disabled>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"></path><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"></path></svg>
+            </button>
+            <button type="button" id="save-btn" aria-label="Save image" title="Save image" disabled>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"></path></svg>
+            </button>
+        </div>
+        <nav class="social" id="social" aria-label="Share on" hidden>
+            <a id="x-share" href="#" target="_blank" rel="noopener">X</a>
+            <a id="threads-share" href="#" target="_blank" rel="noopener">Threads</a>
+            <a id="facebook-share" href="#" target="_blank" rel="noopener">Facebook</a>
+            <a id="linkedin-share" href="#" target="_blank" rel="noopener">LinkedIn</a>
+        </nav>
+        <a class="cta" id="cta" href="https://www.vote.org" target="_blank" rel="noopener">Election Day is Nov 3 &mdash; register or check your status</a>
 
-        <h3>Data</h3>
-        <ul>
-            <li><strong>Votes cast, presidential (2024):</strong> total votes for U.S. President in the November 2024 general election, by county, from official state records compiled by the MIT Election Data and Science Lab.</li>
-            <li><strong>Votes cast, midterm (2022):</strong> the highest vote total for any statewide race (U.S. Senate, governor, other statewide offices and ballot questions) or for U.S. House summed across districts, by county. This is the standard proxy for ballots cast when no single race appears on every ballot. Built from MIT Election Data and Science Lab precinct-level returns. Indiana (where many counties didn&rsquo;t report precinct data), Phillips County, AR and Power County, ID use county-level certified totals instead.</li>
-            <li><strong>Eligible citizens:</strong> citizen voting-age population (CVAP), 2020&ndash;2024 American Community Survey 5-year estimates, U.S. Census Bureau special tabulation (released January 2026).</li>
-        </ul>
+        <section class="methodology" id="methodology">
+            <h2>How it works</h2>
+            <p><strong>Your number</strong> is how many eligible citizens there are in your county for every person who actually voted: <code>eligible citizens &divide; votes cast = 100 &divide; turnout %</code>. If only half of eligible citizens vote, each ballot cast speaks for two people.</p>
 
-        <h3>Adjustments</h3>
-        <ul>
-            <li><strong>Connecticut:</strong> election results are reported for the 8 historical counties, while Census now uses 9 planning regions. Town-level CVAP is summed back to the historical counties.</li>
-            <li><strong>Alaska:</strong> results are reported by state house district, which doesn&rsquo;t line up with boroughs, so Alaska is shown as one statewide figure.</li>
-            <li><strong>Kansas City, MO</strong> votes (reported separately by its election board) are included in Jackson County. <strong>Kalawao County, HI</strong> is combined with Maui County, where its votes are counted.</li>
-        </ul>
+            <h3>Data</h3>
+            <ul>
+                <li><strong>Votes cast, presidential (2024):</strong> total votes for U.S. President in the November 2024 general election, by county, from official state records compiled by the MIT Election Data and Science Lab.</li>
+                <li><strong>Votes cast, midterm (2022):</strong> the highest vote total for any statewide race (U.S. Senate, governor, other statewide offices and ballot questions) or for U.S. House summed across districts, by county. This is the standard proxy for ballots cast when no single race appears on every ballot. Built from MIT Election Data and Science Lab precinct-level returns. Indiana (where many counties didn&rsquo;t report precinct data), Phillips County, AR and Power County, ID use county-level certified totals instead.</li>
+                <li><strong>Eligible citizens:</strong> citizen voting-age population (CVAP), 2020&ndash;2024 American Community Survey 5-year estimates, U.S. Census Bureau special tabulation (released January 2026).</li>
+            </ul>
 
-        <h3>Caveats</h3>
-        <ul>
-            <li><strong>Turnout is slightly understated.</strong> Ballots that skipped the top race are not counted.</li>
-            <li><strong>One population estimate for both years.</strong> The 2020&ndash;2024 survey estimate, centered on 2022, is the denominator for both elections.</li>
-            <li><strong>Small counties are noisy.</strong> Census survey estimates for counties with a few thousand residents carry wide margins of error. Results above 100% are capped at 100%.</li>
-            <li><strong>Some counties include residents who can&rsquo;t vote there.</strong> CVAP counts incarcerated people (ineligible in most states), military personnel registered in their home states, and students registered elsewhere. Counties with large prisons or bases can show artificially low turnout and high Vote Power.</li>
-            <li><strong>Midterms are different.</strong> Turnout in midterm years, such as 2026, typically runs well below presidential years. Nationally it was about 46% in 2022 versus 64% in 2024, which is why the site defaults to the midterm view.</li>
-        </ul>
-        <p>Reproducible build: <a href="https://github.com/snmash/VoteCalculator/tree/main/scripts" target="_blank" rel="noopener"><code>scripts/</code></a> on GitHub (<code>build_2022.py</code>, then <code>build_data.py</code>).</p>
+            <h3>Adjustments</h3>
+            <ul>
+                <li><strong>Connecticut:</strong> election results are reported for the 8 historical counties, while Census now uses 9 planning regions. Town-level CVAP is summed back to the historical counties.</li>
+                <li><strong>Alaska:</strong> results are reported by state house district, which doesn&rsquo;t line up with boroughs, so Alaska is shown as one statewide figure.</li>
+                <li><strong>Kansas City, MO</strong> votes (reported separately by its election board) are included in Jackson County. <strong>Kalawao County, HI</strong> is combined with Maui County, where its votes are counted.</li>
+            </ul>
 
-        <h3>Sources</h3>
-        <ul>
-            <li>MIT Election Data and Science Lab, 2018, &ldquo;County Presidential Election Returns 2000&ndash;2024,&rdquo; Harvard Dataverse, <a href="https://doi.org/10.7910/DVN/VOQCHQ" target="_blank" rel="noopener">doi:10.7910/DVN/VOQCHQ</a> (version 2026-02-25).</li>
-            <li>MIT Election Data and Science Lab, &ldquo;2022 General Election Precinct-Level Returns,&rdquo; <a href="https://github.com/MEDSL/2022-elections-official" target="_blank" rel="noopener">github.com/MEDSL/2022-elections-official</a> (accessed October 2026).</li>
-            <li>2022 county totals for Indiana (U.S. Senate), Phillips County, AR and Power County, ID (governor), taken from Wikipedia&rsquo;s county results tables of the certified results and cross-checked against MEDSL counties where both exist; see <a href="https://github.com/snmash/VoteCalculator/blob/main/scripts/county_votes_2022_fill.csv" target="_blank" rel="noopener"><code>county_votes_2022_fill.csv</code></a>.</li>
-            <li>U.S. Census Bureau, &ldquo;<a href="https://www.census.gov/programs-surveys/decennial-census/about/voting-rights/cvap/2020-2024-CVAP.html" target="_blank" rel="noopener">Citizen Voting Age Population by Race and Ethnicity, 2020&ndash;2024</a>,&rdquo; ACS 5-year special tabulation.</li>
-        </ul>
-    </section>
+            <h3>Caveats</h3>
+            <ul>
+                <li><strong>Turnout is slightly understated.</strong> Ballots that skipped the top race are not counted.</li>
+                <li><strong>One population estimate for both years.</strong> The 2020&ndash;2024 survey estimate, centered on 2022, is the denominator for both elections.</li>
+                <li><strong>Small counties are noisy.</strong> Census survey estimates for counties with a few thousand residents carry wide margins of error. Results above 100% are capped at 100%.</li>
+                <li><strong>Some counties include residents who can&rsquo;t vote there.</strong> CVAP counts incarcerated people (ineligible in most states), military personnel registered in their home states, and students registered elsewhere. Counties with large prisons, bases or colleges can show artificially low turnout and a high number.</li>
+                <li><strong>Midterms are different.</strong> Turnout in midterm years, such as 2026, typically runs well below presidential years. Nationally it was about 46% in 2022 versus 64% in 2024, which is why the site defaults to the midterm view.</li>
+            </ul>
+            <p>Reproducible build: <a href="https://github.com/snmash/VoteCalculator/tree/main/scripts" target="_blank" rel="noopener"><code>scripts/</code></a> on GitHub (<code>build_2022.py</code>, then <code>build_data.py</code>).</p>
+
+            <h3>Sources</h3>
+            <ul>
+                <li>MIT Election Data and Science Lab, 2018, &ldquo;County Presidential Election Returns 2000&ndash;2024,&rdquo; Harvard Dataverse, <a href="https://doi.org/10.7910/DVN/VOQCHQ" target="_blank" rel="noopener">doi:10.7910/DVN/VOQCHQ</a> (version 2026-02-25).</li>
+                <li>MIT Election Data and Science Lab, &ldquo;2022 General Election Precinct-Level Returns,&rdquo; <a href="https://github.com/MEDSL/2022-elections-official" target="_blank" rel="noopener">github.com/MEDSL/2022-elections-official</a> (accessed October 2026).</li>
+                <li>2022 county totals for Indiana (U.S. Senate), Phillips County, AR and Power County, ID (governor), taken from Wikipedia&rsquo;s county results tables of the certified results and cross-checked against MEDSL counties where both exist; see <a href="https://github.com/snmash/VoteCalculator/blob/main/scripts/county_votes_2022_fill.csv" target="_blank" rel="noopener"><code>county_votes_2022_fill.csv</code></a>.</li>
+                <li>U.S. Census Bureau, &ldquo;<a href="https://www.census.gov/programs-surveys/decennial-census/about/voting-rights/cvap/2020-2024-CVAP.html" target="_blank" rel="noopener">Citizen Voting Age Population by Race and Ethnicity, 2020&ndash;2024</a>,&rdquo; ACS 5-year special tabulation.</li>
+            </ul>
+        </section>
+        <p class="credit">Made by <a href="https://www.linkedin.com/in/snmahesh/" target="_blank" rel="noopener">Steven Maheshwary</a> &middot; <a href="https://github.com/snmash/VoteCalculator" target="_blank" rel="noopener">Open source</a></p>
+    </main>
+    <div class="toast" id="toast" role="status"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="share-card.js"></script>
     <script>
+    const SITE = "https://votepower.us";
+    // After Election Day the copy switches from a pledge to past tense.
+    const AFTER_ELECTION = Date.now() >= new Date("2026-11-04T12:00:00-08:00").getTime();
+    const LEAD = AFTER_ELECTION ? "My vote counts for" : "I'm voting for";
+
     const STATE_NAMES = {
         AL: "Alabama", AK: "Alaska", AZ: "Arizona", AR: "Arkansas", CA: "California",
         CO: "Colorado", CT: "Connecticut", DE: "Delaware", DC: "District of Columbia",
@@ -291,201 +373,304 @@
         TN: "Tennessee", TX: "Texas", UT: "Utah", VT: "Vermont", VA: "Virginia",
         WA: "Washington", WV: "West Virginia", WI: "Wisconsin", WY: "Wyoming"
     };
-
-    const CAVEATS = {
-        "small-population": "This county has a small population, so the Census estimate of eligible citizens has a wide margin of error. Treat this figure as approximate.",
-        "ineligible-residents": "Turnout here may look low partly because Census counts residents who don't vote locally, such as people in prison, or military personnel and college students registered in another state. <a href=\"#methodology\">See methodology</a>."
-    };
-
     const ELECTIONS = {
-        "2022": {
-            label: "2022 midterm election",
-            hint: "2026 is a midterm year &mdash; turnout is typically much lower.",
-            data: "2022 county results (highest office), MIT Election Data and Science Lab"
-        },
-        "2024": {
-            label: "2024 presidential election",
-            hint: "Presidential years bring out the most voters.",
-            data: "2024 county presidential returns, MIT Election Data and Science Lab"
-        }
+        "2022": { label: "2022 midterm", sentence: "the 2022 midterm", hint: "2026 is a midterm year &mdash; turnout is typically much lower." },
+        "2024": { label: "2024 presidential", sentence: "the 2024 presidential election", hint: "Presidential years bring out the most voters." }
     };
-    let selectedElection = "2022";
+    const CAVEATS = {
+        "small-population": "Small county, so the Census estimate behind this number has a wide margin of error. Treat it as approximate.",
+        "ineligible-residents": "Turnout here may look low partly because Census counts residents who don't vote locally, such as people in prison, or military personnel and college students registered elsewhere. <a href=\"#methodology\">How it works</a>"
+    };
 
-    const stateCountyData = {};
+    const byState = {};
+    const byFips = {};
+    let election = "2022";
+    let current = null; // { state, row }
+
+    const $ = id => document.getElementById(id);
+    const stateSelect = $("state-select");
+    const countySelect = $("county-select");
+
+    $("lead").textContent = LEAD;
+    if (AFTER_ELECTION) {
+        $("cta").textContent = "Make a plan for the next election";
+    }
+
+    function num(v) { const n = parseFloat(String(v || "").replace("%", "")); return isNaN(n) ? null : n; }
+    function int(v) { const n = parseInt(v, 10); return isNaN(n) ? null : n; }
+    function stateLabel(code) { return STATE_NAMES[code] || code; }
+    function isStatewide(row) { return row.county.startsWith("Statewide"); }
+    function placeLong(state, row) { return isStatewide(row) ? stateLabel(state) : `${row.county}, ${stateLabel(state)}`; }
+    function placeShort(state, row) { return isStatewide(row) ? stateLabel(state) : `${row.county}, ${state}`; }
+    function areaName(state, row) { return isStatewide(row) ? stateLabel(state) : row.county; }
 
     Papa.parse("voter_turnout_data.csv", {
         download: true,
         header: true,
         skipEmptyLines: true,
         complete: function(results) {
-            if (results.errors.length > 0) {
-                console.error("Errors while parsing CSV:", results.errors);
-            }
-
-            results.data.forEach((row, index) => {
-                const state = row['State'];
-                const county = row['County Name'];
-                const turnoutStr = row['Voter Turnout'] ? row['Voter Turnout'].replace('%', '') : null;
-                const votePowerStr = row['Vote Power'];
-
-                if (!state || !county || !turnoutStr || !votePowerStr) {
-                    console.warn(`Skipping row ${index + 1} due to missing data`, row);
-                    return;
-                }
-
-                const turnout = parseFloat(turnoutStr);
-                const votePower = parseFloat(votePowerStr);
-                if (isNaN(turnout) || isNaN(votePower)) {
-                    console.warn(`Skipping row ${index + 1} due to NaN value`, row);
-                    return;
-                }
-
-                if (!stateCountyData[state]) {
-                    stateCountyData[state] = [];
-                }
-                const turnout22 = parseFloat((row['Voter Turnout 2022'] || '').replace('%', ''));
-                const votePower22 = parseFloat(row['Vote Power 2022']);
-                stateCountyData[state].push({
-                    county: county,
-                    "2024": { turnout: turnout, vote_power: votePower },
-                    "2022": isNaN(turnout22) || isNaN(votePower22) ? null : { turnout: turnout22, vote_power: votePower22 },
-                    notes: (row['Note'] || '').split(';').filter(Boolean)
-                });
+            results.data.forEach(r => {
+                if (!r["State"] || !r["County Name"]) return;
+                const row = {
+                    county: r["County Name"],
+                    fips: r["FIPS"],
+                    cvap: int(r["CVAP 2020-2024"]),
+                    notes: (r["Note"] || "").split(";").filter(Boolean),
+                    "2024": { turnout: num(r["Voter Turnout"]), vp: num(r["Vote Power"]), votes: int(r["Total Votes 2024"]) },
+                    "2022": { turnout: num(r["Voter Turnout 2022"]), vp: num(r["Vote Power 2022"]), votes: int(r["Total Votes 2022"]) }
+                };
+                (byState[r["State"]] = byState[r["State"]] || []).push(row);
+                byFips[row.fips] = { state: r["State"], row: row };
             });
-
-            populateStates();
+            Object.keys(byState)
+                .sort((a, b) => stateLabel(a).localeCompare(stateLabel(b)))
+                .forEach(s => stateSelect.add(new Option(stateLabel(s), s)));
+            restoreFromUrl();
         },
-        error: function(error) {
-            console.error("Error loading CSV:", error);
+        error: function(err) { console.error("Error loading CSV:", err); }
+    });
+
+    function restoreFromUrl() {
+        const params = new URLSearchParams(location.search);
+        const e = params.get("e");
+        if (e === "2024" || e === "2022") setElection(e, false);
+        const hit = byFips[params.get("c")];
+        if (hit) {
+            stateSelect.value = hit.state;
+            fillCounties(hit.state);
+            countySelect.value = hit.row.county;
+            select(hit.state, hit.row);
+        }
+    }
+
+    function fillCounties(state) {
+        countySelect.innerHTML = "";
+        countySelect.add(new Option("Choose", ""));
+        (byState[state] || []).forEach(r => countySelect.add(new Option(isStatewide(r) ? "Statewide" : r.county, r.county)));
+        countySelect.disabled = !state;
+    }
+
+    stateSelect.addEventListener("change", function() {
+        fillCounties(this.value);
+        const rows = byState[this.value] || [];
+        if (rows.length === 1) {
+            countySelect.value = rows[0].county;
+            select(this.value, rows[0]);
+        } else {
+            reset();
         }
     });
 
-    function stateLabel(code) {
-        return STATE_NAMES[code] || code;
+    countySelect.addEventListener("change", function() {
+        const row = (byState[stateSelect.value] || []).find(r => r.county === this.value);
+        if (row) select(stateSelect.value, row); else reset();
+    });
+
+    document.querySelectorAll(".toggle button").forEach(btn => {
+        btn.addEventListener("click", () => setElection(btn.dataset.election, true));
+    });
+
+    function setElection(e, rerender) {
+        election = e;
+        document.querySelectorAll(".toggle button").forEach(b => b.setAttribute("aria-pressed", b.dataset.election === e ? "true" : "false"));
+        $("toggle-hint").innerHTML = ELECTIONS[e].hint;
+        if (rerender && current) select(current.state, current.row);
     }
 
-    function populateStates() {
-        const stateSelect = document.getElementById('state-select');
-        Object.keys(stateCountyData)
-            .sort((a, b) => stateLabel(a).localeCompare(stateLabel(b)))
-            .forEach(state => {
-                const option = document.createElement('option');
-                option.value = state;
-                option.textContent = stateLabel(state);
-                stateSelect.appendChild(option);
-            });
+    function setActionsEnabled(on) {
+        ["share-btn", "copy-btn", "save-btn"].forEach(id => { $(id).disabled = !on; });
+        $("social").hidden = !on;
     }
 
-    const stateSelect = document.getElementById('state-select');
-    const countySelect = document.getElementById('county-select');
-    const calculateButton = document.getElementById('calculate-button');
-    const resultContainer = document.getElementById('result-container');
-    const socialShareContainer = document.getElementById('social-share-container');
+    function reset() {
+        current = null;
+        $("num").textContent = "?";
+        $("people").innerHTML = '<span class="caption">Pick your county to find out.</span>';
+        $("stat").textContent = "In low-turnout places, every ballot speaks for more than one person.";
+        $("rank").hidden = true;
+        $("caveats").innerHTML = "";
+        setActionsEnabled(false);
+        history.replaceState(null, "", location.pathname + (election === "2024" ? "?e=2024" : ""));
+    }
 
-    stateSelect.addEventListener('change', function() {
-        const selectedState = this.value;
-        countySelect.innerHTML = '<option value="">Select your county</option>';
-        countySelect.disabled = selectedState === "";
-        calculateButton.disabled = true;
+    function personSvg(x, color, clipW, id) {
+        const shape = `<circle cx="${x + 18}" cy="11" r="10" fill="${color}"></circle><path d="M${x} 56c0-13 8-21 18-21s18 8 18 21z" fill="${color}"></path>`;
+        if (clipW === null) return shape;
+        return `<clipPath id="${id}"><rect x="${x}" y="0" width="${clipW}" height="56"></rect></clipPath><g clip-path="url(#${id})">${shape}</g>`;
+    }
 
-        if (selectedState) {
-            const counties = stateCountyData[selectedState];
-            counties.forEach(entry => {
-                const option = document.createElement('option');
-                option.value = entry.county;
-                option.textContent = entry.county;
-                countySelect.appendChild(option);
-            });
-            // Single-row states (DC, Alaska): preselect it.
-            if (counties.length === 1) {
-                countySelect.value = counties[0].county;
-                calculateButton.disabled = false;
-            }
+    function peopleFigure(vp) {
+        const whole = Math.floor(vp + 1e-9);
+        const frac = Math.round((vp - whole) * 10) / 10;
+        const shown = Math.min(whole, 6);
+        let parts = "";
+        let x = 0;
+        for (let i = 0; i < shown; i++) {
+            parts += personSvg(x, i === 0 ? "#FFD23F" : "#FFFFFF", null);
+            x += 42;
         }
-    });
+        if (frac > 0 && whole < 7) {
+            parts += personSvg(x, "#FFFFFF", Math.round(36 * frac), "partial-person");
+            x += 42;
+        }
+        const w = Math.max(x - 6, 36);
+        return `<svg width="${w}" height="56" viewBox="0 0 ${w} 56" aria-hidden="true">${parts}</svg>`;
+    }
 
-    countySelect.addEventListener('change', function() {
-        calculateButton.disabled = this.value === "";
-    });
+    function captionFor(vp) {
+        const extra = Math.round((vp - 1) * 10) / 10;
+        if (extra <= 0) return "just me &mdash; nearly everyone here votes";
+        if (extra < 1) return `me + ${Math.round(extra * 100)}% of a neighbor`;
+        if (extra === 1) return "me + 1 neighbor";
+        return `me + ${Number.isInteger(extra) ? extra : extra.toFixed(1)} neighbors`;
+    }
 
-    let hasResult = false;
-
-    document.querySelectorAll('.election-toggle button').forEach(btn => {
-        btn.addEventListener('click', function() {
-            selectedElection = this.dataset.election;
-            document.querySelectorAll('.election-toggle button').forEach(b => {
-                const on = b === this;
-                b.classList.toggle('active', on);
-                b.setAttribute('aria-pressed', on ? 'true' : 'false');
-            });
-            document.getElementById('toggle-hint').innerHTML = ELECTIONS[selectedElection].hint;
-            if (hasResult) {
-                renderResult();
-            }
-        });
-    });
-
-    calculateButton.addEventListener('click', renderResult);
-
-    function renderResult() {
-        const state = stateSelect.value;
-        const county = countySelect.value;
-        const countyData = state && stateCountyData[state] ? stateCountyData[state].find(entry => entry.county === county) : null;
-        const election = ELECTIONS[selectedElection];
-        const figures = countyData ? countyData[selectedElection] : null;
-
-        if (!countyData || !figures) {
-            resultContainer.textContent = `Sorry, we don't have ${election.label} data for ${county}, ${stateLabel(state)}. Please try another selection.`;
-            socialShareContainer.style.display = 'none';
+    function select(state, row) {
+        const fig = row[election];
+        if (!fig || fig.vp === null) {
+            reset();
+            $("stat").textContent = `We don't have ${ELECTIONS[election].label} data for this county.`;
             return;
         }
-        hasResult = true;
+        current = { state: state, row: row };
+        const vp = fig.vp.toFixed(1);
+        const t = fig.turnout;
+        $("num").textContent = vp;
+        $("people").innerHTML = peopleFigure(fig.vp) + `<span class="caption">${captionFor(fig.vp)}</span>`;
 
-        const vp = figures.vote_power.toFixed(1);
-        const turnout = figures.turnout.toFixed(1);
-        const place = countyData.county.startsWith('Statewide') ? stateLabel(state) : `${county}, ${stateLabel(state)}`;
+        const area = areaName(state, row);
+        let stat = `${t < 75 ? "Only " : ""}${t.toFixed(0)}% of ${area} voted in ${ELECTIONS[election].sentence}.`;
+        if (row.cvap && fig.votes && row.cvap > fig.votes && t < 100) {
+            stat += ` ${(row.cvap - fig.votes).toLocaleString("en-US")} eligible citizens sat it out.`;
+        }
+        $("stat").textContent = stat;
 
-        resultContainer.innerHTML =
-            `Your vote counts for <strong>${vp}</strong> eligible voters!<br><br>` +
-            `What does this mean? <strong>${turnout}%</strong> of eligible citizens in ${place} voted in the ${election.label}, ` +
-            `so each ballot cast spoke for ${vp} people. Now make that vote count, ` +
-            `<a href="https://www.vote.org" target="_blank" rel="noopener">register and vote today!</a>`;
+        const peers = (byState[state] || []).filter(r => r[election] && r[election].turnout !== null);
+        if (peers.length > 1) {
+            const sorted = peers.slice().sort((a, b) => a[election].turnout - b[election].turnout);
+            const rank = sorted.indexOf(row) + 1;
+            $("rank").textContent = `#${rank} of ${peers.length} counties in ${stateLabel(state)} for vote power`;
+            $("rank").hidden = false;
+        } else {
+            $("rank").hidden = true;
+        }
 
-        countyData.notes.forEach(note => {
-            if (CAVEATS[note]) {
-                const div = document.createElement('div');
-                div.className = 'caveat';
-                div.innerHTML = CAVEATS[note];
-                resultContainer.appendChild(div);
-            }
-        });
+        $("caveats").innerHTML = row.notes
+            .filter(n => CAVEATS[n])
+            .map(n => `<p class="caveat">${CAVEATS[n]}</p>`)
+            .join("");
 
-        const footnote = document.createElement('div');
-        footnote.className = 'footnote';
-        footnote.innerHTML = `Data: ${election.data}; ` +
-            'citizen voting-age population, Census 2020&ndash;2024 ACS 5-year estimates. <a href="#methodology">Methodology</a>';
-        resultContainer.appendChild(footnote);
-
-        socialShareContainer.style.display = 'block';
-
-        const basis = selectedElection === "2022" ? "midterm" : "presidential";
-        const shareText = `I just discovered my voting power in ${place}! Based on ${basis} turnout, I'm voting on behalf of ${vp} eligible voters. Find out yours at https://votepower.us/`;
-        const encoded = encodeURIComponent(shareText);
-        document.getElementById('facebook-share').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://votepower.us/')}&quote=${encoded}`;
-        document.getElementById('x-share').href = `https://twitter.com/intent/tweet?text=${encoded}`;
-        document.getElementById('threads-share').href = `https://www.threads.net/intent/post?text=${encoded}`;
-        document.getElementById('linkedin-share').href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://votepower.us/')}`;
-
-        // Instagram has no share URL; copy the text so it can be pasted into a story or post.
-        const ig = document.getElementById('instagram-share');
-        ig.href = 'https://www.instagram.com/';
-        ig.onclick = function() {
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(shareText).catch(() => {});
-            }
-        };
-        ig.title = 'Copies your result so you can paste it into Instagram';
+        setActionsEnabled(true);
+        updateShareLinks();
+        const q = `?c=${row.fips}` + (election === "2024" ? "&e=2024" : "");
+        history.replaceState(null, "", location.pathname + q);
+        if (typeof gtag === "function") gtag("event", "view_result", { county_fips: row.fips, election: election });
     }
+
+    function shareUrl() {
+        if (!current) return SITE + "/";
+        return election === "2022"
+            ? `${SITE}/c/${current.row.fips}/`
+            : `${SITE}/?c=${current.row.fips}&e=2024`;
+    }
+
+    function shareText() {
+        const vp = current.row[election].vp.toFixed(1);
+        const lead = AFTER_ELECTION ? "My vote counts for" : "I'm voting for";
+        return `${lead} ${vp} people in ${placeShort(current.state, current.row)}. How many are you voting for?`;
+    }
+
+    function updateShareLinks() {
+        const url = shareUrl();
+        const text = shareText();
+        $("x-share").href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+        $("threads-share").href = `https://www.threads.net/intent/post?text=${encodeURIComponent(text + " " + url)}`;
+        $("facebook-share").href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+        $("linkedin-share").href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+    }
+
+    function cardData() {
+        const fig = current.row[election];
+        return {
+            lead: LEAD.toUpperCase(),
+            number: fig.vp.toFixed(1),
+            place: placeShort(current.state, current.row),
+            election: ELECTIONS[election].label,
+            turnout: fig.turnout.toFixed(0) + "%"
+        };
+    }
+
+    async function makeImage() {
+        await loadShareFonts();
+        const canvas = drawShareCard(document.createElement("canvas"), cardData(), "story");
+        return new Promise(resolve => canvas.toBlob(resolve, "image/png"));
+    }
+
+    function fileName() {
+        return `votepower-${current.row.fips}-${election}.png`;
+    }
+
+    function toast(msg) {
+        const t = $("toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        clearTimeout(toast._t);
+        toast._t = setTimeout(() => t.classList.remove("show"), 2600);
+    }
+
+    async function copy(text) {
+        try { await navigator.clipboard.writeText(text); return true; } catch (e) { return false; }
+    }
+
+    function download(blob) {
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = fileName();
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    }
+
+    $("share-btn").addEventListener("click", async () => {
+        if (!current) return;
+        const text = shareText();
+        const url = shareUrl();
+        if (typeof gtag === "function") gtag("event", "share", { method: "share_button", county_fips: current.row.fips, election: election });
+        try {
+            const blob = await makeImage();
+            const file = new File([blob], fileName(), { type: "image/png" });
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({ files: [file], text: `${text} ${url}` });
+                return;
+            }
+            if (navigator.share) {
+                await navigator.share({ title: "votepower", text: text, url: url });
+                return;
+            }
+            download(blob);
+            const ok = await copy(`${text} ${url}`);
+            toast(ok ? "Image saved and caption copied — paste it anywhere" : "Image saved");
+        } catch (e) {
+            if (e && e.name === "AbortError") return;
+            const ok = await copy(`${text} ${url}`);
+            toast(ok ? "Caption and link copied" : "Couldn't open sharing on this device");
+        }
+    });
+
+    $("copy-btn").addEventListener("click", async () => {
+        if (!current) return;
+        const ok = await copy(shareUrl());
+        toast(ok ? "Link copied" : shareUrl());
+        if (typeof gtag === "function") gtag("event", "share", { method: "copy_link", county_fips: current.row.fips, election: election });
+    });
+
+    $("save-btn").addEventListener("click", async () => {
+        if (!current) return;
+        download(await makeImage());
+        toast("Image saved");
+        if (typeof gtag === "function") gtag("event", "share", { method: "save_image", county_fips: current.row.fips, election: election });
+    });
     </script>
 </body>
 </html>

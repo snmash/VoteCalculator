@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>votepower preview renderer</title>
+<style>
+@font-face { font-family: 'Archivo'; src: url('../../fonts/archivo-800.woff2') format('woff2'); font-weight: 800; }
+@font-face { font-family: 'Bricolage Grotesque'; src: url('../../fonts/bricolage-800.woff2') format('woff2'); font-weight: 800; }
+</style>
+</head>
+<body>
+<!-- Used only by scripts/render_previews.py to draw link-preview images. -->
+<script src="../../share-card.js"></script>
+<script>
+async function renderOg(d) {
+  await loadShareFonts();
+  return drawShareCard(document.createElement("canvas"), d, "og").toDataURL("image/png");
+}
+</script>
+</body>
+</html>

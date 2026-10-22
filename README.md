@@ -10,6 +10,12 @@ Voting power calculation: shows how many eligible citizens each actual voter rep
 
 Social sharing: share your result on Facebook, X, Threads, LinkedIn, or Instagram (Instagram copies the text to paste).
 
+**Sharing and link previews**
+
+- The result card reads "I'm voting for N people" (switching to "My vote counts for" after Election Day), with a one-tap share that generates a 4:5 sticker image in the browser (`share-card.js`).
+- Every county has a share URL, `votepower.us/c/<FIPS>/`, whose Open Graph image (`og/<FIPS>.png`) shows that county's 2022 midterm number, so links unfurl with the number in iMessage, X, Threads, Slack and LinkedIn. Regenerate them after any data change with `python3 scripts/render_previews.py` (add `--after` once the election is over).
+- Fonts (Anton, Archivo, Bricolage Grotesque) are self-hosted under `fonts/` with their SIL Open Font Licenses.
+
 **Technologies Used**
 
 HTML, CSS, JavaScript; PapaParse for CSV parsing; Python for the data build.

@@ -176,9 +176,10 @@
 
         .actions {
             display: grid;
-            grid-template-columns: minmax(0, 1fr) 54px 54px;
+            grid-template-columns: minmax(0, 1fr) 54px;
             gap: 8px;
         }
+        .actions .primary { grid-column: 1 / -1; }
         .actions button {
             height: 54px;
             border-radius: 16px;
@@ -297,11 +298,12 @@
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 8l5-5 5 5M5 14v6h14v-6"></path></svg>
                 Share my number
             </button>
+            <button type="button" id="save-btn" disabled>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="3"></rect><path d="M12 7v7M9 11l3 3 3-3"></path></svg>
+                Save sticker for Stories
+            </button>
             <button type="button" id="copy-btn" aria-label="Copy link" title="Copy link" disabled>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"></path><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"></path></svg>
-            </button>
-            <button type="button" id="save-btn" aria-label="Save image" title="Save image" disabled>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"></path></svg>
             </button>
         </div>
         <nav class="social" id="social" aria-label="Share on" hidden>
@@ -632,31 +634,45 @@
         setTimeout(() => URL.revokeObjectURL(a.href), 2000);
     }
 
+    // Share = caption + link only. The link unfurls into the county's sticker
+    // (Open Graph image), so attaching the PNG as well would show it twice.
     $("share-btn").addEventListener("click", async () => {
         if (!current) return;
         const text = shareText();
         const url = shareUrl();
         if (typeof gtag === "function") gtag("event", "share", { method: "share_button", county_fips: current.row.fips, election: election });
-        try {
-            const blob = await makeImage();
-            const file = new File([blob], fileName(), { type: "image/png" });
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                await navigator.share({ files: [file], text: `${text} ${url}` });
+        if (navigator.share) {
+            try {
+                await navigator.share({ text: text, url: url });
                 return;
+            } catch (e) {
+                if (e && e.name === "AbortError") return;
             }
-            if (navigator.share) {
-                await navigator.share({ title: "votepower", text: text, url: url });
-                return;
-            }
-            download(blob);
-            const ok = await copy(`${text} ${url}`);
-            toast(ok ? "Image saved and caption copied — paste it anywhere" : "Image saved");
-        } catch (e) {
-            if (e && e.name === "AbortError") return;
-            const ok = await copy(`${text} ${url}`);
-            toast(ok ? "Caption and link copied" : "Couldn't open sharing on this device");
         }
+        const ok = await copy(`${text} ${url}`);
+        toast(ok ? "Caption and link copied — paste it anywhere" : `${text} ${url}`);
     });
+
+    // Save sticker = image only, for Instagram Stories or a camera-roll post.
+    // On phones this opens the share sheet with just the image ("Save Image",
+    // Instagram, etc.); elsewhere it downloads the file.
+    const isTouch = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+    async function saveSticker() {
+        const blob = await makeImage();
+        if (isTouch && navigator.canShare) {
+            const file = new File([blob], fileName(), { type: "image/png" });
+            if (navigator.canShare({ files: [file] })) {
+                try {
+                    await navigator.share({ files: [file] });
+                    return;
+                } catch (e) {
+                    if (e && e.name === "AbortError") return;
+                }
+            }
+        }
+        download(blob);
+        toast("Sticker saved");
+    }
 
     $("copy-btn").addEventListener("click", async () => {
         if (!current) return;
@@ -667,9 +683,8 @@
 
     $("save-btn").addEventListener("click", async () => {
         if (!current) return;
-        download(await makeImage());
-        toast("Image saved");
-        if (typeof gtag === "function") gtag("event", "share", { method: "save_image", county_fips: current.row.fips, election: election });
+        if (typeof gtag === "function") gtag("event", "share", { method: "save_sticker", county_fips: current.row.fips, election: election });
+        await saveSticker();
     });
     </script>
 </body>

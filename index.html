@@ -228,6 +228,43 @@
             text-align: center;
         }
         .toast.show { opacity: 1; }
+        .sheet {
+            position: fixed;
+            inset: 0;
+            background: var(--ink);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            padding: 20px 16px;
+            z-index: 10;
+        }
+        .sheet[hidden] { display: none; }
+        .sheet img {
+            max-width: min(100%, 420px);
+            max-height: 68vh;
+            border-radius: 14px;
+            -webkit-touch-callout: default;
+            user-select: auto;
+        }
+        .sheet p { margin: 0; color: #fff; font-weight: 800; font-size: 16px; text-align: center; }
+        .sheet .sheet-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+        .sheet button, .sheet a.btn {
+            min-height: 48px;
+            padding: 0 18px;
+            border-radius: 14px;
+            border: 2px solid var(--ground);
+            background: var(--ground);
+            color: var(--ink);
+            font: 800 15px 'Archivo', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .sheet .ghost { background: transparent; color: #fff; border-color: #fff; }
+        .sheet a.btn[hidden] { display: none; }
         .credit { text-align: center; font-size: 13px; margin: 4px 0 0; }
 
         .methodology {
@@ -353,6 +390,14 @@
         <footer class="credit">&copy; 2026 <a href="https://www.linkedin.com/in/snmahesh/" target="_blank" rel="noopener">Steven Maheshwary</a>. All rights reserved.</footer>
     </main>
     <div class="toast" id="toast" role="status"></div>
+    <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-msg" hidden>
+        <img id="sheet-img" alt="Your votepower sticker">
+        <p id="sheet-msg">Press and hold the image, then tap Save to Photos</p>
+        <div class="sheet-actions">
+            <a class="btn" id="sheet-download" href="#" download>Download image</a>
+            <button type="button" class="ghost" id="sheet-close">Done</button>
+        </div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script src="share-card.js"></script>
@@ -564,6 +609,7 @@
 
         setActionsEnabled(true);
         updateShareLinks();
+        prepareSticker();
         const q = `?c=${row.fips}` + (election === "2024" ? "&e=2024" : "");
         history.replaceState(null, "", location.pathname + q);
         if (typeof gtag === "function") gtag("event", "view_result", { county_fips: row.fips, election: election });
@@ -653,24 +699,66 @@
         toast(ok ? "Caption and link copied — paste it anywhere" : `${text} ${url}`);
     });
 
-    // Save sticker = image only, for Instagram Stories or a camera-roll post.
-    // On phones this opens the share sheet with just the image ("Save Image",
-    // Instagram, etc.); elsewhere it downloads the file.
+    // Save sticker = image only, for Instagram Stories or Photos.
+    // The image is drawn ahead of time (as soon as a county is picked) because
+    // iOS Safari only opens the share sheet if share() is called right after
+    // the tap; awaiting the drawing first makes it fall back to a file download.
+    // Phones: share sheet with just the image ("Save Image" -> Photos,
+    // Instagram, ...). If sharing isn't available (e.g. in-app browsers), show
+    // the image full screen to press-and-hold. Computers: download the file.
     const isTouch = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+    let sticker = { key: null, blob: null, file: null, url: null, pending: null };
+
+    function stickerKey() { return current ? `${current.row.fips}-${election}` : null; }
+
+    function prepareSticker() {
+        const key = stickerKey();
+        if (!key || sticker.key === key) return sticker.pending;
+        if (sticker.url) URL.revokeObjectURL(sticker.url);
+        sticker = { key: key, blob: null, file: null, url: null, pending: null };
+        sticker.pending = makeImage().then(blob => {
+            if (sticker.key !== key) return;
+            sticker.blob = blob;
+            sticker.file = new File([blob], fileName(), { type: "image/png" });
+            sticker.url = URL.createObjectURL(blob);
+        });
+        return sticker.pending;
+    }
+
+    function openSheet() {
+        $("sheet-img").src = sticker.url;
+        $("sheet-download").href = sticker.url;
+        $("sheet-download").setAttribute("download", fileName());
+        $("sheet-msg").textContent = isTouch
+            ? "Press and hold the image, then tap Save to Photos"
+            : "Your sticker";
+        // On phones a file download lands in Files, not Photos, so only offer press-and-hold.
+        $("sheet-download").hidden = isTouch;
+        $("sheet").hidden = false;
+        $("sheet-close").focus();
+    }
+    $("sheet-close").addEventListener("click", () => { $("sheet").hidden = true; });
+    $("sheet").addEventListener("click", e => { if (e.target.id === "sheet") $("sheet").hidden = true; });
+    document.addEventListener("keydown", e => { if (e.key === "Escape") $("sheet").hidden = true; });
+
     async function saveSticker() {
-        const blob = await makeImage();
-        if (isTouch && navigator.canShare) {
-            const file = new File([blob], fileName(), { type: "image/png" });
-            if (navigator.canShare({ files: [file] })) {
-                try {
-                    await navigator.share({ files: [file] });
-                    return;
-                } catch (e) {
-                    if (e && e.name === "AbortError") return;
-                }
+        if (!sticker.file || sticker.key !== stickerKey()) {
+            // Not drawn yet (very fast tap): finish drawing, then use the
+            // press-and-hold sheet, since the tap's share permission has lapsed.
+            await prepareSticker();
+            if (isTouch) openSheet(); else { download(sticker.blob); toast("Sticker saved"); }
+            return;
+        }
+        if (isTouch && navigator.canShare && navigator.canShare({ files: [sticker.file] })) {
+            try {
+                await navigator.share({ files: [sticker.file] });
+                return;
+            } catch (e) {
+                if (e && e.name === "AbortError") return;
             }
         }
-        download(blob);
+        if (isTouch) { openSheet(); return; }
+        download(sticker.blob);
         toast("Sticker saved");
     }
 

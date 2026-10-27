@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>How many people are you voting for? · votepower</title>
-    <meta name="description" content="In low-turnout counties, every ballot speaks for more than one person. Find out how many people you're voting for, based on real county turnout.">
+    <title>How Many People Are You Voting For? Voter Turnout by County | votepower</title>
+    <meta name="description" content="Does your vote matter? See how many people your vote speaks for, using real 2022 midterm and 2024 voter turnout for every U.S. county. Free and nonpartisan.">
+    <link rel="canonical" href="https://votepower.us/">
     <meta name="theme-color" content="#FFD23F">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"votepower","url":"https://votepower.us/"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"votepower: How many people are you voting for?","url":"https://votepower.us/","applicationCategory":"ReferenceApplication","operatingSystem":"Any","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"See how many eligible citizens your vote speaks for in your U.S. county, based on official 2022 midterm and 2024 presidential turnout.","creator":{"@type":"Person","name":"Steven Maheshwary"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"U.S. voter turnout and vote power by county, 2022 midterm and 2024 presidential","description":"County-level votes cast, citizen voting-age population (2020-2024 ACS), turnout and vote power (eligible citizens per vote cast) for every U.S. county in the 2022 midterm and 2024 presidential elections. Votes from MIT Election Data and Science Lab returns; eligible citizens from the U.S. Census Bureau CVAP special tabulation.","url":"https://votepower.us/","creator":{"@type":"Person","name":"Steven Maheshwary"},"spatialCoverage":"United States","temporalCoverage":"2022/2024","variableMeasured":["Votes cast","Citizen voting-age population","Voter turnout","Vote power"],"isBasedOn":["https://doi.org/10.7910/DVN/VOQCHQ","https://github.com/MEDSL/2022-elections-official","https://www.census.gov/programs-surveys/decennial-census/about/voting-rights/cvap/2020-2024-CVAP.html"],"distribution":[{"@type":"DataDownload","encodingFormat":"text/csv","contentUrl":"https://votepower.us/voter_turnout_data.csv"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does my vote really matter?","acceptedAnswer":{"@type":"Answer","text":"In the 2022 midterm, only 46% of eligible U.S. citizens voted, and about 130 million sat it out. When turnout is low, each ballot that is cast speaks for more people. In about two-thirds of U.S. counties, every 2022 midterm ballot spoke for two or more eligible citizens."}},{"@type":"Question","name":"What does “I’m voting for 1.8 people” mean?","acceptedAnswer":{"@type":"Answer","text":"It’s the number of eligible citizens in your county for every vote actually cast. If 57% of eligible citizens vote, each ballot represents 100 ÷ 57 = 1.8 people."}},{"@type":"Question","name":"What was voter turnout in 2022 and 2024?","acceptedAnswer":{"@type":"Answer","text":"Nationally, 46.0% of eligible citizens voted in the 2022 midterm and 64.4% in the 2024 presidential election, based on county totals. Midterm turnout is almost always lower, so each vote counts for more in a midterm year like 2026."}},{"@type":"Question","name":"When is Election Day 2026?","acceptedAnswer":{"@type":"Answer","text":"Tuesday, November 3, 2026. Registration deadlines, early voting and mail ballot rules vary by state, so check yours at vote.org."}},{"@type":"Question","name":"Is votepower partisan?","acceptedAnswer":{"@type":"Answer","text":"No. It shows turnout only, with no candidates, parties or positions, and there’s nothing to sign up for."}},{"@type":"Question","name":"Where does the data come from?","acceptedAnswer":{"@type":"Answer","text":"Votes cast come from official state returns compiled by the MIT Election Data and Science Lab. Eligible citizens come from the U.S. Census Bureau’s citizen voting-age population estimates (2020–2024)."}}]}</script>
     <link rel="preload" href="fonts/anton-400.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="fonts/archivo-700.woff2" as="font" type="font/woff2" crossorigin>
     <!-- Google tag (gtag.js) -->
@@ -281,6 +286,45 @@
         .methodology p, .methodology ul { margin: 0 0 8px; }
         .methodology ul { padding-left: 20px; }
         .methodology code { background: #F1EEF8; padding: 1px 4px; border-radius: 4px; font-size: 0.92em; }
+        .voted {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-height: 44px;
+            align-self: flex-start;
+            padding: 0 14px 0 10px;
+            border: 2px solid var(--ink);
+            border-radius: 999px;
+            font-weight: 800;
+            font-size: 15px;
+            cursor: pointer;
+        }
+        .voted[hidden] { display: none; }
+        .voted input { width: 22px; height: 22px; accent-color: var(--ink); margin: 0; cursor: pointer; }
+        .voted:has(input:checked) { background: var(--ink); color: #fff; }
+        .voted:has(input:checked) input { accent-color: var(--ground); }
+        .seo {
+            background: var(--paper);
+            border-radius: 22px;
+            padding: 22px 20px;
+            font-size: 15px;
+            line-height: 1.55;
+            color: #2B2640;
+            margin-top: 10px;
+        }
+        .seo h2 { font-family: 'Anton', Impact, sans-serif; font-weight: 400; font-size: 26px; margin: 18px 0 8px; color: var(--ink); letter-spacing: 0.01em; }
+        .seo h2:first-child { margin-top: 0; }
+        .seo p { margin: 0 0 10px; }
+        .seo .states { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 4px 12px; margin: 0 0 6px; padding: 0; list-style: none; font-weight: 700; font-size: 14px; }
+        .seo .states a { display: inline-block; padding: 3px 0; }
+        .seo details { border-top: 1px solid #ECE8F6; padding: 10px 0; }
+        .seo details:last-of-type { border-bottom: 1px solid #ECE8F6; }
+        .seo summary { font-weight: 800; cursor: pointer; color: var(--ink); min-height: 28px; }
+        .seo details p { margin: 8px 0 0; }
+        .seo .download { margin-top: 14px; font-weight: 800; }
+        .poweredby { display: none; text-align: center; font-size: 13px; font-weight: 700; margin: 0; }
+        body.embed .seo, body.embed .methodology, body.embed .credit { display: none; }
+        body.embed .poweredby { display: block; }
         .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
         @media (min-width: 720px) {
@@ -330,6 +374,10 @@
         </section>
         <div id="caveats"></div>
 
+        <label class="voted" id="voted-wrap" hidden>
+            <input type="checkbox" id="voted-toggle">
+            <span>I already voted</span>
+        </label>
         <div class="actions">
             <button type="button" class="primary" id="share-btn" disabled>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 8l5-5 5 5M5 14v6h14v-6"></path></svg>
@@ -351,6 +399,41 @@
         </nav>
         <a class="cta" id="cta" href="https://www.vote.org" target="_blank" rel="noopener">Election Day is Nov 3 &mdash; register or check your status</a>
 
+        <section class="seo" id="learn">
+            <h2>Does my vote matter?</h2>
+            <p>More than you think. In the 2022 midterm, only 46% of eligible Americans voted. When fewer people show up, each ballot speaks for more of your neighbors. votepower uses official turnout for every U.S. county to show how many people your vote counts for.</p>
+            <h2>Voter turnout by state</h2>
+            <p>See every county ranked, or compare <a href="/state/">turnout across all states</a>.</p>
+            <!--STATES:START-->
+            <ul class="states"><li><a href="/state/alabama/">Alabama</a></li><li><a href="/state/alaska/">Alaska</a></li><li><a href="/state/arizona/">Arizona</a></li><li><a href="/state/arkansas/">Arkansas</a></li><li><a href="/state/california/">California</a></li><li><a href="/state/colorado/">Colorado</a></li><li><a href="/state/connecticut/">Connecticut</a></li><li><a href="/state/delaware/">Delaware</a></li><li><a href="/state/district-of-columbia/">District of Columbia</a></li><li><a href="/state/florida/">Florida</a></li><li><a href="/state/georgia/">Georgia</a></li><li><a href="/state/hawaii/">Hawaii</a></li><li><a href="/state/idaho/">Idaho</a></li><li><a href="/state/illinois/">Illinois</a></li><li><a href="/state/indiana/">Indiana</a></li><li><a href="/state/iowa/">Iowa</a></li><li><a href="/state/kansas/">Kansas</a></li><li><a href="/state/kentucky/">Kentucky</a></li><li><a href="/state/louisiana/">Louisiana</a></li><li><a href="/state/maine/">Maine</a></li><li><a href="/state/maryland/">Maryland</a></li><li><a href="/state/massachusetts/">Massachusetts</a></li><li><a href="/state/michigan/">Michigan</a></li><li><a href="/state/minnesota/">Minnesota</a></li><li><a href="/state/mississippi/">Mississippi</a></li><li><a href="/state/missouri/">Missouri</a></li><li><a href="/state/montana/">Montana</a></li><li><a href="/state/nebraska/">Nebraska</a></li><li><a href="/state/nevada/">Nevada</a></li><li><a href="/state/new-hampshire/">New Hampshire</a></li><li><a href="/state/new-jersey/">New Jersey</a></li><li><a href="/state/new-mexico/">New Mexico</a></li><li><a href="/state/new-york/">New York</a></li><li><a href="/state/north-carolina/">North Carolina</a></li><li><a href="/state/north-dakota/">North Dakota</a></li><li><a href="/state/ohio/">Ohio</a></li><li><a href="/state/oklahoma/">Oklahoma</a></li><li><a href="/state/oregon/">Oregon</a></li><li><a href="/state/pennsylvania/">Pennsylvania</a></li><li><a href="/state/rhode-island/">Rhode Island</a></li><li><a href="/state/south-carolina/">South Carolina</a></li><li><a href="/state/south-dakota/">South Dakota</a></li><li><a href="/state/tennessee/">Tennessee</a></li><li><a href="/state/texas/">Texas</a></li><li><a href="/state/utah/">Utah</a></li><li><a href="/state/vermont/">Vermont</a></li><li><a href="/state/virginia/">Virginia</a></li><li><a href="/state/washington/">Washington</a></li><li><a href="/state/west-virginia/">West Virginia</a></li><li><a href="/state/wisconsin/">Wisconsin</a></li><li><a href="/state/wyoming/">Wyoming</a></li></ul>
+            <!--STATES:END-->
+            <h2>Questions</h2>
+            <details>
+                <summary>Does my vote really matter?</summary>
+                <p>In the 2022 midterm, only 46% of eligible U.S. citizens voted, and about 130 million sat it out. When turnout is low, each ballot that is cast speaks for more people. In about two-thirds of U.S. counties, every 2022 midterm ballot spoke for two or more eligible citizens.</p>
+            </details>
+            <details>
+                <summary>What does “I’m voting for 1.8 people” mean?</summary>
+                <p>It’s the number of eligible citizens in your county for every vote actually cast. If 57% of eligible citizens vote, each ballot represents 100 ÷ 57 = 1.8 people.</p>
+            </details>
+            <details>
+                <summary>What was voter turnout in 2022 and 2024?</summary>
+                <p>Nationally, 46.0% of eligible citizens voted in the 2022 midterm and 64.4% in the 2024 presidential election, based on county totals. Midterm turnout is almost always lower, so each vote counts for more in a midterm year like 2026.</p>
+            </details>
+            <details>
+                <summary>When is Election Day 2026?</summary>
+                <p>Tuesday, November 3, 2026. Registration deadlines, early voting and mail ballot rules vary by state, so check yours at <a href="https://www.vote.org" target="_blank" rel="noopener">vote.org</a>.</p>
+            </details>
+            <details>
+                <summary>Is votepower partisan?</summary>
+                <p>No. It shows turnout only, with no candidates, parties or positions, and there’s nothing to sign up for.</p>
+            </details>
+            <details>
+                <summary>Where does the data come from?</summary>
+                <p>Votes cast come from official state returns compiled by the MIT Election Data and Science Lab. Eligible citizens come from the U.S. Census Bureau’s citizen voting-age population estimates (2020–2024).</p>
+            </details>
+            <p class="download"><a href="/voter_turnout_data.csv" download>Download the county data (CSV)</a></p>
+        </section>
         <section class="methodology" id="methodology">
             <h2>How it works</h2>
             <p><strong>Your number</strong> is how many eligible citizens there are in your county for every person who actually voted: <code>eligible citizens &divide; votes cast = 100 &divide; turnout %</code>. If only half of eligible citizens vote, each ballot cast speaks for two people.</p>
@@ -372,6 +455,7 @@
             </ul>
         </section>
         <footer class="credit">&copy; 2026 <a href="https://www.linkedin.com/in/snmahesh/" target="_blank" rel="noopener">Steven Maheshwary</a>. All rights reserved.</footer>
+        <p class="poweredby"><a href="https://votepower.us/" target="_blank" rel="noopener">votepower.us</a> &middot; find your county&rsquo;s number</p>
     </main>
     <div class="toast" id="toast" role="status"></div>
     <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-msg" hidden>
@@ -389,7 +473,13 @@
     const SITE = "https://votepower.us";
     // After Election Day the copy switches from a pledge to past tense.
     const AFTER_ELECTION = Date.now() >= new Date("2026-11-04T12:00:00-08:00").getTime();
-    const LEAD = AFTER_ELECTION ? "My vote counts for" : "I'm voting for";
+    // Lead text: "I voted for" once the visitor ticks "I already voted";
+    // otherwise a pledge before Election Day and past tense after it.
+    let voted = false;
+    try { voted = localStorage.getItem("vp-voted") === "1"; } catch (e) {}
+    function lead() { return voted ? "I voted for" : (AFTER_ELECTION ? "My vote counts for" : "I'm voting for"); }
+    // Embed mode (?embed=1) for partner sites: calculator only, links open in a new tab.
+    const EMBED = new URLSearchParams(location.search).get("embed") === "1";
 
     const STATE_NAMES = {
         AL: "Alabama", AK: "Alaska", AZ: "Arizona", AR: "Arkansas", CA: "California",
@@ -422,7 +512,19 @@
     const stateSelect = $("state-select");
     const countySelect = $("county-select");
 
-    $("lead").textContent = LEAD;
+    $("lead").textContent = lead();
+    $("voted-toggle").checked = voted;
+    $("voted-toggle").addEventListener("change", function() {
+        voted = this.checked;
+        try { localStorage.setItem("vp-voted", voted ? "1" : "0"); } catch (e) {}
+        $("lead").textContent = lead();
+        if (current) { updateShareLinks(); prepareSticker(); }
+        if (typeof gtag === "function" && voted) gtag("event", "marked_voted", current ? { county_fips: current.row.fips } : {});
+    });
+    if (EMBED) {
+        document.body.classList.add("embed");
+        document.querySelector(".wordmark").setAttribute("target", "_blank");
+    }
     if (AFTER_ELECTION) {
         $("cta").textContent = "Make a plan for the next election";
     }
@@ -511,6 +613,7 @@
     function setActionsEnabled(on) {
         ["share-btn", "copy-btn", "save-btn"].forEach(id => { $(id).disabled = !on; });
         $("social").hidden = !on;
+        $("voted-wrap").hidden = !on;
     }
 
     function reset() {
@@ -608,8 +711,7 @@
 
     function shareText() {
         const vp = current.row[election].vp.toFixed(1);
-        const lead = AFTER_ELECTION ? "My vote counts for" : "I'm voting for";
-        return `${lead} ${vp} people in ${placeShort(current.state, current.row)}. How many are you voting for?`;
+        return `${lead()} ${vp} people in ${placeShort(current.state, current.row)}. How many are you voting for?`;
     }
 
     function updateShareLinks() {
@@ -624,7 +726,7 @@
     function cardData() {
         const fig = current.row[election];
         return {
-            lead: LEAD.toUpperCase(),
+            lead: lead().toUpperCase(),
             number: fig.vp.toFixed(1),
             place: placeShort(current.state, current.row),
             election: ELECTIONS[election].label,
@@ -693,7 +795,7 @@
     const isTouch = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
     let sticker = { key: null, blob: null, file: null, url: null, pending: null };
 
-    function stickerKey() { return current ? `${current.row.fips}-${election}` : null; }
+    function stickerKey() { return current ? `${current.row.fips}-${election}-${voted ? "v" : "p"}` : null; }
 
     function prepareSticker() {
         const key = stickerKey();

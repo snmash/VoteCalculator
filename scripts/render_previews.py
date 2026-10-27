@@ -1,14 +1,11 @@
 #!/usr/bin/env python3
 """Render per-county link previews for votepower.us.
 
-For every county in voter_turnout_data.csv this writes:
-  og/<FIPS>.png        1200x630 Open Graph image (2022 midterm figure)
-  c/<FIPS>/index.html  a tiny page whose <meta> tags point at that image and
-                       which forwards visitors to /?c=<FIPS>
-plus og/default.png for the home page.
-
-Link unfurlers (iMessage, X, Facebook, Slack, LinkedIn) read the meta tags and
-never run JavaScript, so each shared county link shows its own number.
+For every county in voter_turnout_data.csv this writes og/<FIPS>.png, a
+1200x630 Open Graph image of the 2022 midterm figure, plus og/default.png.
+The county pages that reference them (c/<FIPS>/index.html) are written by
+scripts/build_pages.py. Link unfurlers (iMessage, X, Facebook, Slack, LinkedIn)
+read those pages' meta tags, so each shared county link shows its own number.
 
 Requires: playwright (with Chromium) and Pillow. Run from the repo root:
   python3 scripts/render_previews.py            # pre-election copy
@@ -17,7 +14,6 @@ Requires: playwright (with Chromium) and Pillow. Run from the repo root:
 import argparse
 import base64
 import csv
-import html
 import io
 import os
 import socketserver
@@ -46,34 +42,6 @@ STATE_NAMES = {
     "WA": "Washington", "WV": "West Virginia", "WI": "Wisconsin", "WY": "Wyoming",
 }
 
-PAGE = """<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{title}</title>
-<meta name="description" content="{desc}">
-<link rel="canonical" href="{url}">
-<meta property="og:title" content="{title}">
-<meta property="og:description" content="{desc}">
-<meta property="og:image" content="{image}">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="{alt}">
-<meta property="og:url" content="{url}">
-<meta property="og:type" content="website">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="{title}">
-<meta name="twitter:description" content="{desc}">
-<meta name="twitter:image" content="{image}">
-<script>location.replace("/?c={fips}" + (location.search ? "&" + location.search.slice(1) : ""));</script>
-<style>body{{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#FFD23F;color:#17112E;font:700 18px system-ui,sans-serif}}a{{color:#17112E}}</style>
-</head>
-<body>
-<a href="/?c={fips}">See how many people you're voting for &rarr;</a>
-</body>
-</html>
-"""
 
 
 def whole_pct(s):
@@ -102,7 +70,6 @@ def main():
     ap.add_argument("--port", type=int, default=8799)
     args = ap.parse_args()
     lead = "MY VOTE COUNTS FOR" if args.after else "I'M VOTING FOR"
-    lead_sentence = "My vote counts for" if args.after else "I'm voting for"
 
     root = os.getcwd()
     rows = list(csv.DictReader(open(os.path.join(root, "voter_turnout_data.csv"), newline="")))
@@ -132,22 +99,12 @@ def main():
             with open(f"og/{fips}.png", "wb") as f:
                 f.write(quantized_png(page.evaluate("d => renderOg(d)", d)))
 
-            only = "Only " if float(r["Voter Turnout 2022"].rstrip("%")) < 75 else ""
-            title = f"{lead_sentence} {vp} people in {place_short(state, county)}"
-            desc = (f"{only}{turnout}% of {area(state, county)} voted in the 2022 midterm. "
-                    "How many people are you voting for?")
-            os.makedirs(f"c/{fips}", exist_ok=True)
-            with open(f"c/{fips}/index.html", "w") as f:
-                f.write(PAGE.format(
-                    title=html.escape(title), desc=html.escape(desc),
-                    alt=html.escape(f"Sticker reading {lead_sentence} {vp} people, {place_short(state, county)}"),
-                    url=f"{SITE}/c/{fips}/", image=f"{SITE}/og/{fips}.png", fips=fips))
             if (i + 1) % 250 == 0:
                 print(f"{i + 1}/{len(rows)}", flush=True)
 
         browser.close()
     server.shutdown()
-    print(f"Rendered {len(rows)} county previews + default")
+    print(f"Rendered {len(rows)} county preview images + default")
 
 
 if __name__ == "__main__":

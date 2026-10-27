@@ -1,0 +1,30 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:'Anton';src:url('file:///home/claude/votecalculator/fonts/anton-400.woff2') format('woff2');}
+@font-face{font-family:'Archivo';src:url('file:///home/claude/votecalculator/fonts/archivo-500.woff2') format('woff2');font-weight:500;}
+@font-face{font-family:'Archivo';src:url('file:///home/claude/votecalculator/fonts/archivo-800.woff2') format('woff2');font-weight:800;}
+html,body{margin:0}
+.c{width:2000px;height:1500px;background:#FCFBF7;color:#17112E;font-family:'Archivo',sans-serif;box-sizing:border-box;padding:70px 80px 56px;display:flex;flex-direction:column}
+h1{font-family:'Anton',sans-serif;font-weight:400;font-size:92px;line-height:1;margin:0;letter-spacing:.005em}
+.sub{font-size:34px;font-weight:500;margin:18px 0 0;color:#3A3255;max-width:1700px}
+.map{flex:1;display:flex;align-items:center;justify-content:center;margin:10px 0}
+.map img{width:1640px;height:auto}
+.legend{display:flex;align-items:center;gap:28px;font-size:28px;font-weight:800;flex-wrap:wrap}
+.legend .k{font-weight:500;color:#3A3255;margin-right:4px}
+.sw{display:inline-flex;align-items:center;gap:10px}
+.sw i{width:44px;height:28px;border-radius:5px;display:inline-block}
+.foot{display:flex;justify-content:space-between;align-items:flex-end;margin-top:26px;font-size:22px;color:#3A3255;gap:40px}
+.brand{font-family:'Anton',sans-serif;font-size:40px;color:#17112E;white-space:nowrap}
+.brand span{background:#FFD23F;padding:2px 12px;border-radius:8px}
+</style></head><body><div class="c">
+<h1>How many people does one vote speak for?</h1>
+<p class="sub">Eligible citizens per ballot cast in the 2022 midterm, by county. Darker counties had lower turnout, so each vote there counted for more people.</p>
+<div class="map"><img src="file:///tmp/claude-0/work/map.svg"></div>
+<div class="legend"><span class="k">People per vote</span>
+<span class="sw"><i style="background:#B7A9EE"></i>under 1.75</span>
+<span class="sw"><i style="background:#937FE0"></i>1.75&ndash;2</span>
+<span class="sw"><i style="background:#6E54C9"></i>2&ndash;2.5</span>
+<span class="sw"><i style="background:#4B30A3"></i>2.5&ndash;3</span>
+<span class="sw"><i style="background:#24135F"></i>3 or more</span></div>
+<div class="foot"><div>Data: MIT Election Data and Science Lab (2022 returns; highest statewide or U.S. House vote per county); U.S. Census Bureau citizen voting-age population, 2020&ndash;2024 ACS. Alaska shown statewide. Nationally, 46% of eligible citizens voted.</div>
+<div class="brand"><span>votepower.us</span></div></div>
+</div></body></html>

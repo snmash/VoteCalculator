@@ -16,6 +16,14 @@ Social sharing: share your result on Facebook, X, Threads, LinkedIn, or Instagra
 - Every county has a share URL, `votepower.us/c/<FIPS>/`, whose Open Graph image (`og/<FIPS>.png`) shows that county's 2022 midterm number, so links unfurl with the number in iMessage, X, Threads, Slack and LinkedIn. Regenerate them after any data change with `python3 scripts/render_previews.py` (add `--after` once the election is over).
 - Fonts (Anton, Archivo, Bricolage Grotesque) are self-hosted under `fonts/` with their SIL Open Font Licenses.
 
+**Search and discovery**
+
+- `scripts/build_pages.py` writes an indexable page for every county (`/c/<FIPS>/`), every state (`/state/<name>/`) and a state index (`/state/`), plus `sitemap.xml` and `robots.txt`. It also refreshes the homepage's state links. Run it after any data change.
+- The homepage carries WebSite, WebApplication, Dataset and FAQPage structured data and links the CSV for download.
+- `.github/workflows/indexnow.yml` notifies IndexNow search engines (Bing and the engines it feeds) of every sitemap URL when `sitemap.xml` changes. The key file is the 32-character `.txt` file at the site root.
+- `?embed=1` shows the calculator alone for iframes on partner sites.
+- `images/vote-power-map-2022.png` is the national county map (source in `scripts/map/`).
+
 **Technologies Used**
 
 HTML, CSS, JavaScript; PapaParse for CSV parsing; Python for the data build.

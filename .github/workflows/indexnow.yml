@@ -1,0 +1,15 @@
+name: IndexNow
+on:
+  push:
+    branches: [main]
+    paths: [sitemap.xml]
+  workflow_dispatch:
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Wait for GitHub Pages to publish
+        run: sleep 240
+      - name: Submit sitemap URLs to IndexNow
+        run: python3 scripts/indexnow.py
